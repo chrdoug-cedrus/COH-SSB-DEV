@@ -1,0 +1,40 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="COH_PreferredLast_Name Rule" type="IdentityAttribute">
+  <Description>Identity attribute rules are used when the value is not simply a copy of an application account attribute value.  A transformation may be necessary on the account attribute, or several account attributes may need to be combined to produce the identity attribute.
+
+This rule can be called in two ways: as a global mapping rule and an application mapping rule.  A global mapping rule is called whenever the identity is refreshed.  The rule can look at any account attributes.  An application mapping rule is called only when the identity contains an account link for that application, this link is passed in the "link" argument which is not passed in global mapping rules.</Description>
+  <Signature returnType="String"/>
+  <Source>import org.apache.log4j.Logger;
+import org.apache.log4j.Level;
+
+Logger  logger = Logger.getLogger("sailpoint.custom.COH.provisioning.rule"); 
+ Logger  logger = Logger.getLogger("sailpoint.api.Identitizer 1.0");
+ logger.setLevel(Level.DEBUG); 
+
+String prefName = identity.getStringAttribute("preferredName");
+String lastName = "";
+if(null != prefName &amp;&amp; !prefName.isEmpty())
+{
+  int index = -1;
+  String actualLastName = identity.getStringAttribute("lastname");
+  String[] DescrSplit = prefName.split("\\s");
+  for(int i=0;i&lt;DescrSplit.length;i++)
+  {
+	if(DescrSplit[i].equalsIgnoreCase(actualLastName)) {
+        index = i;
+		}
+   }
+   if(index &gt;=0)
+	lastName = DescrSplit[index];
+   else 
+    lastName = actualLastName;
+}
+else
+ lastName = identity.getStringAttribute("lastname");
+
+
+ logger.debug("****Preferred Last name :**********  :" +lastName);
+ 
+return lastName;</Source>
+</Rule>

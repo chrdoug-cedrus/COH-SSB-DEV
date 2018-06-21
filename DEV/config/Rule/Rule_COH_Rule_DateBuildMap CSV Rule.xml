@@ -1,0 +1,98 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="COH_Rule_DateBuildMap CSV Rule" type="BuildMap">
+  <Description>This rule is used by the delimited file connector to build a map representation of the delimited data.</Description>
+  <Signature returnType="Map">
+    <Inputs>
+      <Argument name="log">
+        <Description>
+          The log object associated with the SailPointContext.
+        </Description>
+      </Argument>
+      <Argument name="context">
+        <Description>
+          A sailpoint.api.SailPointContext object that can be used to query the database if necessary.
+        </Description>
+      </Argument>
+      <Argument name="application">
+        <Description>
+          The application whose data file is being processed.
+        </Description>
+      </Argument>
+      <Argument name="schema">
+        <Description>
+          The Schema currently in use.
+        </Description>
+      </Argument>
+      <Argument name="state">
+        <Description>
+          A Map containing state information.
+        </Description>
+      </Argument>
+      <Argument name="record">
+        <Description>
+          A List of data tokens parsed from the current line of the data file.
+        </Description>
+      </Argument>
+      <Argument name="cols">
+        <Description>
+          A List of the columns to use.
+        </Description>
+      </Argument>
+    </Inputs>
+    <Returns>
+      <Argument name="map">
+        <Description>
+          A Map of the resource object assembled from the data.
+        </Description>
+      </Argument>
+    </Returns>
+  </Signature>
+  <Source>import sailpoint.connector.DelimitedFileConnector;
+import org.apache.log4j.Logger;
+import org.apache.log4j.Level;
+  
+Logger  logger = Logger.getLogger("sailpoint.custom.manulife.rule.CorrelationRule"); 
+Logger  logger = Logger.getLogger("sailpoint.api.Identitizer");
+logger.setLevel(Level.DEBUG); 
+
+//logger.debug("********Build Map Date Rule*************** ");
+Map map = DelimitedFileConnector.defaultBuildMap(cols, record);
+String startDate = (String) map.get("START_DT");
+String lastDate = (String) map.get("LAST_DATE_WORKED");
+String lastTransac_Entered = (String) map.get("ACTION_DT");
+String lastTransac_Effective = (String) map.get("EFFDT");
+
+    if(startDate == null  || startDate.isEmpty() || startDate.equalsIgnoreCase("(null)"))
+    {
+	  map.put("START_DT",""); 
+	}else
+	  map.put("START_DT",startDate.split("\\s+")[0]); 
+	
+	if(lastDate == null  || lastDate.isEmpty() || lastDate.equalsIgnoreCase("(null)"))
+    {
+	  map.put("LAST_DATE_WORKED",""); 
+	}else
+	  map.put("LAST_DATE_WORKED",lastDate.split("\\s+")[0]); 
+	
+	if(lastTransac_Entered == null  || lastTransac_Entered.isEmpty() || lastTransac_Entered.equalsIgnoreCase("(null)"))
+    {
+	  map.put("ACTION_DT",""); 
+	}else
+	  map.put("ACTION_DT",lastTransac_Entered.split("\\s+")[0]); 
+	
+	if(lastTransac_Effective == null  || lastTransac_Effective.isEmpty() || lastTransac_Effective.equalsIgnoreCase("(null)"))
+    {
+	  map.put("EFFDT",""); 
+	}else
+	  map.put("EFFDT",lastTransac_Effective.split("\\s+")[0]);
+	
+	
+ 
+
+  //logger.setLevel(Level.OFF); 
+//logger.debug("********Build Map Date Rule*** lastDate************ "  +date);
+
+   
+return map;</Source>
+</Rule>

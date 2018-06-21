@@ -1,0 +1,111 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="COH_Rule_Badge Rule" type="BeforeProvisioning">
+  <Description>An IdentityIQ server-side rule that is executed before the connector's provisioning method is called. This gives the customer the ability to customize or react to anything in the ProvisioningPlan BEFORE it is sent to the underlying connectors used in provisioning. 
+
+This rule will be called for any application found in a plan that also has a configured 'beforeProvisioningRule' configured.  
+
+The plan can be updated directly in the rule by reference and does not need to return the plan.</Description>
+  <Signature>
+    <Inputs>
+      <Argument name="log">
+        <Description>
+          The log object associated with the SailPointContext.
+        </Description>
+      </Argument>
+      <Argument name="context">
+        <Description>
+          A sailpoint.api.SailPointContext object that can be used to query the database if necessary.
+        </Description>
+      </Argument>
+      <Argument name="plan">
+        <Description>
+          The ProvisioningPlan object on its way to the Connector.
+        </Description>
+      </Argument>
+      <Argument name="application">
+        <Description>
+          The application object that references this before/after script.
+        </Description>
+      </Argument>
+    </Inputs>
+  </Signature>
+  <Source>import sailpoint.object.Application;
+import sailpoint.object.ProvisioningPlan.AccountRequest;
+import sailpoint.object.ProvisioningPlan.AccountRequest.Operation; 
+import sailpoint.tools.Util;
+import org.apache.log4j.Logger;
+import org.apache.log4j.Level;
+import sailpoint.object.Identity;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import sailpoint.tools.GeneralException;
+  
+ Logger  logger = Logger.getLogger("sailpoint.custom.COH.provisioning.rule.Badge"); 
+ Logger  logger = Logger.getLogger("sailpoint.api.Identitizer 1.0");
+ logger.setLevel(Level.DEBUG); 
+
+ logger.debug("****Badge Test:::::**********  :");
+
+ logger.debug("**** Plan field values :::::::**********  :" + context);
+ Identity identity = plan.getIdentity();  
+ AccountRequest accReq = plan.getAccountRequest(application.getName());
+ logger.debug("****Fields for ChangeTableLog :::::::**********  :" );
+ logger.debug("****EmpID :::::::**********  :" + identity.getAttribute("employeeNumber"));
+ logger.debug("**** PayrollID:::::::**********  :" +identity.getAttribute("employeeNumber"));
+ logger.debug("****lastName :::::::**********  :" +identity.getAttribute("lastname"));
+ logger.debug("**** FirstName:::::::**********  :" +identity.getAttribute("firstname"));
+ logger.debug("**** HireDate:::::::**********  :" +identity.getAttribute("startDate"));
+ logger.debug("**** TermDate:::::::**********  :" +identity.getAttribute("lastDate"));
+ logger.debug("**** Department:::::::**********  :" +identity.getAttribute("costCenterName"));
+ logger.debug("**** Title:::::::**********  :" +identity.getAttribute("jobName"));
+ logger.debug("*****************************************************  :");
+  if (identity != null ||  identity.getName() != null)
+  logger.debug("**************************************test***************  :");
+
+  if (identity != null) {
+	try {
+		Connection conn = null;
+		//     ResultSet rs = null;
+		String url = "jdbc:jtds:sqlserver://SQLPROD2k/AcsImport";
+		String driver = "net.sourceforge.jtds.jdbc.Driver";
+		String userName = "AcsImpDatUsr";
+		String password = "6uFZ22Br";
+
+		Class.forName(driver);
+		conn = DriverManager.getConnection(url, userName, password);
+		logger.debug("*******Connected to the database!!! ************************************  :");
+		int dsxFlag = 0;
+		String query = " insert into ACSImport..changeTable(EmployeeID, PayrollID, LastName, FirstName, HireDate, TermDate, Department, Title,DSXFlag)" + " values (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+		PreparedStatement preparedStmt = conn.prepareStatement(query);
+		preparedStmt.setString(1, identity.getAttribute("employeeNumber"));
+		preparedStmt.setString(2, identity.getAttribute("employeeNumber"));		
+		preparedStmt.setString(3,identity.getAttribute("lastname"));
+		preparedStmt.setString(4,identity.getAttribute("firstname"));
+		preparedStmt.setString(5, identity.getAttribute("startDate"));
+		preparedStmt.setString(6, identity.getAttribute("lastDate"));
+		preparedStmt.setString(7,identity.getAttribute("costCenterName"));
+		preparedStmt.setString(8,identity.getAttribute("jobName"));
+		if (accReq.getOp() != null) {
+logger.debug("*******Operation value*********************  :" +accReq.getOp().toString());
+           if (accReq.getOp().toString().equals("Disable")) { 
+               dsxFlag = 2;
+            } 
+			else
+			{
+			  dsxFlag = 1;
+			}
+        }
+		logger.debug("**** DSXFLAG:::::::**********  :" + dsxFlag);
+        preparedStmt.setInt(9,dsxFlag);		
+ //  preparedStmt.setBoolean(9,dsxFlag);		
+		preparedStmt.execute();
+		conn.close();
+  logger.debug("*****Database successfully updated*******************");
+	} catch (Exception e) {
+              logger.error(e);
+		logger.error("cannot update DB");
+	}
+ }</Source>
+</Rule>

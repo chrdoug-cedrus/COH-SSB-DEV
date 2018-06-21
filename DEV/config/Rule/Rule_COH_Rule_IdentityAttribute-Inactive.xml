@@ -1,0 +1,50 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="COH_Rule_IdentityAttribute-Inactive" type="IdentityAttribute">
+  <Description>
+        If the STATUS indicator is marked with a T, mark the user as inactive.  
+  </Description>
+  <Signature returnType="String">
+    <Inputs>
+      <Argument name="context">
+        <Description>
+           A SailPointContext object used if its necessary
+           to query objects from the database.
+        </Description>
+      </Argument>
+      <Argument name="environment" type="Map">
+        <Description>
+           Arguments passed to the aggregation or refresh task.
+        </Description>
+      </Argument>
+      <Argument name="identity">
+        <Description>
+           The Identity object that represents the user
+           that is being aggregated.
+        </Description>
+      </Argument>
+      <Argument name="attributeDefinition">
+        <Description>
+           The AttributeDefinition object for this attribute.
+        </Description>
+      </Argument>
+    </Inputs>
+    <Returns>
+      <Argument name="attributeValue">
+        <Description>
+          The value of the attribute that should be populated.
+          The rule should return this value.
+        </Description>
+      </Argument>
+    </Returns>
+  </Signature>
+  <Source>
+
+String status = link.getAttribute("Describes Current State of Employee");
+if("T".equalsIgnoreCase(EMPL_STATUS)){
+return true;
+}
+return false;
+    
+  </Source>
+</Rule>

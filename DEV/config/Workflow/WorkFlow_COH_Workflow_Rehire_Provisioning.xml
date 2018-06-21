@@ -1,0 +1,441 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE Workflow PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Workflow explicitTransitions="true" handler="sailpoint.api.StandardWorkflowHandler" libraries="Identity" name="COH_Workflow_Rehire_Provisioning" type="IdentityLifecycle">
+  <Variable initializer="true" name="trace">
+    <Description>
+			Used for debugging this workflow and when set to true trace
+			will be sent to stdout.
+		</Description>
+  </Variable>
+  <Variable name="userAccountDetails"/>
+  <Variable input="true" name="trigger">
+    <Description>The IdentityTrigger</Description>
+  </Variable>
+  <Variable input="true" name="event" transient="true">
+    <Description>
+      The IdentityChangeEvent.  It can be used to build
+      the provisioning plan, but does not need to be
+      persisted with the case, so marked as transient.
+    </Description>
+  </Variable>
+  <Variable input="true" name="identityName">
+    <Description>The name of the identity.</Description>
+  </Variable>
+  <Variable input="true" name="flow">
+    <Description>
+      The name of the LCM flow that launched this workflow.
+    </Description>
+  </Variable>
+  <Variable name="project">
+    <Description>
+      ProvisioningProject which is just a compiled version of the ProvisioningPlan.
+    </Description>
+  </Variable>
+  <Variable name="plan"/>
+  <Variable initializer="true" name="transient"/>
+  <Description>Process a new employee.</Description>
+  <Step icon="Start" name="Start" posX="28" posY="10">
+    <Transition to="Update Identity WF Process"/>
+  </Step>
+  <Step name="Update Identity WF Process">
+    <Arg name="identityName" value="ref:identityName"/>
+    <Script>
+      <Source>
+
+	  import sailpoint.object.Identity;
+	  
+		if ( identityName != null) {
+			Identity identity = context.getObjectByName(Identity.class, identityName);
+			if (identity != null) {
+				identity.setAttribute("workflowProcess", "JOINER REHIRE - " + new Date());				
+				context.saveObject(identity);
+				context.commitTransaction();
+				context.decache();
+			}
+		}	  
+    </Source>
+    </Script>
+    <Transition to="Build Plan for Assigned Roles"/>
+  </Step>
+  <Step name="Build Plan for Assigned Roles" posX="98" posY="10" resultVariable="plan">
+    <Script>
+      <Source>
+		
+		import sailpoint.object.ProvisioningPlan;
+		import sailpoint.object.ProvisioningPlan.AccountRequest;
+		import sailpoint.object.ProvisioningPlan.AttributeRequest;
+		import sailpoint.object.ProvisioningPlan.Operation;
+        import sailpoint.object.Identity;
+        import sailpoint.object.Bundle;
+        import sailpoint.api.IdentityService;
+		import sailpoint.object.Application;
+        import sailpoint.api.ObjectUtil;
+        import java.util.List;
+System.out.println("***start build plan for assigned roles");
+        
+        Identity identity = context.getObjectByName(Identity.class, identityName);
+        ObjectUtil.unlockIdentity(context, identity);
+        
+        Application application = context.getObjectByName(Application.class, "New Active Directory");
+				IdentityService idServ = new IdentityService(context);
+				List appLinks = idServ.getLinks(identity, application);
+
+        if(appLinks != null  &amp;&amp; !appLinks.isEmpty())
+        	return new ProvisioningPlan();
+        	
+		ProvisioningPlan plan = new ProvisioningPlan();
+    plan.setNativeIdentity(identityName);
+		AccountRequest request = new AccountRequest();
+		request.setApplication("IIQ");
+		request.setNativeIdentity(identityName);
+		request.setOperation(AccountRequest.Operation.Modify);
+		if(identity.getAssignedRoles() != null){
+			for(Bundle role : identity.getAssignedRoles()){
+				request.add(new AttributeRequest("assignedRoles", Operation.Add, role.getName()));
+			}
+		}
+        System.out.println("***before build plan for assigned roles");
+		plan.add(request);
+        System.out.println("***end build plan for assigned roles");
+		
+		return plan;
+      </Source>
+    </Script>
+    <Transition to="Execute Generated Plan">
+      <Script>
+        <Source>
+        if(plan != null &amp;&amp; !plan.isEmpty())
+        	return true;
+        else
+        	return false;
+  		</Source>
+      </Script>
+    </Transition>
+    <Transition to="Build Enable Accounts Plan"/>
+  </Step>
+  <Step name="Build Enable Accounts Plan" resultVariable="plan">
+    <Script>
+      <Source>
+		
+      import sailpoint.object.ProvisioningPlan;
+      import sailpoint.object.ProvisioningPlan.AccountRequest;
+      import sailpoint.object.ProvisioningPlan.AttributeRequest;
+      import sailpoint.object.ProvisioningPlan.Operation;
+			import sailpoint.object.Link;
+        import sailpoint.object.Identity;
+        import sailpoint.api.ObjectUtil;
+        import sailpoint.object.Identity;
+             import java.util.Random;
+             import java.lang.String;
+        
+        System.out.println("**starting of enable of assinged");
+        
+        public String getPasswordData(){
+          Random random = new Random();
+              int  n = random.nextInt(100) + 1;
+              String number = String.format("%02d", n );
+              log.debug("Random Number is :::: "+n);
+             //100 is the maximum and the 1 is our minimum 
+               String firstName = identity.getStringAttribute("firstname");
+               String lastName = identity.getStringAttribute("lastname");
+               String fn,ln;
+              String pwd;
+               if(firstName != null &amp;&amp; lastName != null){
+               fn=""+firstName.charAt(0);
+               ln=""+lastName.charAt(0);
+               pwd=fn+ln+"Ex@m"+number;
+             }
+             log.debug("**pwd in wf:: "+pwd);
+             return pwd;
+        }
+
+        Identity identity = context.getObjectByName(Identity.class, identityName);
+        ObjectUtil.unlockIdentity(context, identity);
+      ProvisioningPlan plan = new ProvisioningPlan();
+      plan.setNativeIdentity(identityName);
+      if (identity.getLinks() != null) {
+        for (Link link : identity.getLinks()) {
+          if (link.isDisabled()) {
+            AccountRequest accntReq = new AccountRequest();
+            accntReq.setNativeIdentity(link.getNativeIdentity());
+            accntReq.setApplication(link.getApplicationName());
+            accntReq.setOperation(AccountRequest.Operation.Enable);
+        		accntReq.add(new AttributeRequest("password", ProvisioningPlan.Operation.Set, getPasswordData()));
+        accntReq.add(new AttributeRequest("pwdLastSet", ProvisioningPlan.Operation.Set, true));
+            plan.add(accntReq);
+          }
+        }
+      }
+System.out.println("**ending of enable of assinged"+plan.toXml());
+      return plan;
+      </Source>
+    </Script>
+    <Transition to="Execute Generated Plan">
+      <Script>
+        <Source>
+        if(plan != null &amp;&amp; !plan.isEmpty())
+        	return true;
+        else
+        	return false;
+  		</Source>
+      </Script>
+    </Transition>
+    <Transition to="end"/>
+  </Step>
+  <Step name="Execute Generated Plan" posX="264" posY="10">
+    <Arg name="foregroundProvisioning" value="true"/>
+    <Arg name="plan" value="ref:plan"/>
+    <Arg name="identityName" value="ref:identityName"/>
+    <Arg name="approvalScheme" value="none"/>
+    <Arg name="notificationScheme" value="none"/>
+    <Arg name="launcher" value="string:spadmin"/>
+    <Arg name="flow" value="ref:flow"/>
+    <Return name="project" to="project"/>
+    <WorkflowRef>
+      <Reference class="sailpoint.object.Workflow" name="LCM Provisioning"/>
+    </WorkflowRef>
+    <Transition to="Parse Project Plan"/>
+  </Step>
+  <Step name="Parse Project Plan" resultVariable="userAccountDetails">
+    <Arg name="project" value="ref:project"/>
+    <Script>
+      <Source>
+	  
+        import java.util.ArrayList;
+        import java.util.Date;
+        import java.util.HashMap;
+        import java.util.HashSet;
+        import java.util.List;
+        import java.util.Map;
+        import java.util.Set;
+
+        import org.apache.commons.logging.Log;
+        import org.apache.commons.logging.LogFactory;
+
+        import sailpoint.api.ObjectUtil;
+        import sailpoint.api.SailPointContext;
+        import sailpoint.object.Custom;
+        import sailpoint.object.Identity;
+        import sailpoint.object.ProvisioningPlan;
+        import sailpoint.object.ProvisioningPlan.AccountRequest;
+        import sailpoint.object.ProvisioningPlan.AttributeRequest;
+        import sailpoint.object.ProvisioningProject;
+        import sailpoint.object.ProvisioningResult;
+        import sailpoint.object.QueryOptions;
+
+        
+        System.out.println("**starting parse project::");
+	
+        Map userProvisionFailureMap = new HashMap();
+        Map userProvisionSuccessMap = new HashMap();
+        Custom custObj = context.getObjectByName(Custom.class, "Custom");
+        List secretAttributes = (List) custObj.get("secretAttributes");
+        Set emailsSet = new HashSet();
+
+        Identity identity = project.getIdentity() != null ? context.getObjectByName(Identity.class, project.getIdentity()) : null;
+
+        if (project != null &amp;&amp; project.getPlans() != null) {
+          for (ProvisioningPlan plan : project.getPlans()) {
+            if (plan.getAccountRequests() != null &amp;&amp; !plan.getAccountRequests().isEmpty()) {
+              for (AccountRequest acntReq : plan.getAccountRequests()) {
+                if (acntReq.getResult() != null) {
+                  if (ProvisioningResult.STATUS_COMMITTED.equals(acntReq.getResult().getStatus()) &amp;&amp; (AccountRequest.Operation.Create.equals(acntReq.getOperation()) || AccountRequest.Operation.Enable.equals(acntReq.getOperation()))) {
+                    if (acntReq.getAttributeRequests() != null) {
+                      for (AttributeRequest attrReq : acntReq.getAttributeRequests()) {
+                        if (ObjectUtil.isSecret(attrReq.getName()) || (secretAttributes != null &amp;&amp; secretAttributes.contains(attrReq.getName()))) {
+                          userProvisionSuccessMap.put("secretValue", context.decrypt(attrReq.getValue()));
+                          userProvisionSuccessMap.put("isSendNotification", "Yes");
+                        } else {
+                          userProvisionSuccessMap.put("ad_" + attrReq.getName(), attrReq.getValue());
+                        }
+                      }
+
+                      if (identity != null &amp;&amp; identity.getManager() != null &amp;&amp; identity.getManager().getEmail() != null) {
+                        emailsSet.add(identity.getManager().getEmail());
+                      } else {
+                        String defaultManager = custObj.getString("IIQ_defaultManager");
+                        if (defaultManager != null) {
+                          Identity defMangrGroup = context.getObjectByName(Identity.class, defaultManager);
+                          if (defMangrGroup != null)
+                            emailsSet.add(ObjectUtil.getEffectiveEmails(context, defMangrGroup));
+                        }
+                      }
+                      userProvisionSuccessMap.put("applicationName", acntReq.getApplicationName());
+                      userProvisionSuccessMap.put("nativeIdentity", acntReq.getNativeIdentity());
+                      userProvisionSuccessMap.put("emailTemplate", "EmailTemplate_LifeCycleEvent_BirthRight_Completion_Notification");
+                      userProvisionSuccessMap.put("emailIds", emailsSet);
+                      userProvisionSuccessMap.put("name", identity.getDisplayableName());
+                      userProvisionSuccessMap.put("workflowProcess", "SUCCESS");
+                    }
+                  } else if (ProvisioningResult.STATUS_FAILED.equals(acntReq.getResult().getStatus())) {
+                    String adManager = custObj.getString("AD Manager Wokrgroup");
+                    if (adManager != null) {
+                      Identity adMangrGroup = context.getObjectByName(Identity.class, adManager);
+                      if (adMangrGroup != null)
+                        emailsSet.add(ObjectUtil.getEffectiveEmails(context, adMangrGroup));
+                    }
+
+                    userProvisionFailureMap.put("name", identity.getDisplayableName());
+                    userProvisionFailureMap.put("isSendNotification", "Yes");
+                    userProvisionFailureMap.put("emailTemplate",
+                        "EmailTemplate_LifeCycleEvent_BirthRight_Failure_Notification");
+                    userProvisionFailureMap.put("emailIds", emailsSet);
+                    userProvisionFailureMap.put("workflowProcess", "FAILED");
+                  }
+                }
+              }
+            }
+          }
+        }
+        System.out.println("**userProvisionFailureMap parse project::" + userProvisionFailureMap);
+        System.out.println("**userProvisionSuccessMap parse project::" + userProvisionSuccessMap);
+
+        if (!userProvisionSuccessMap.isEmpty()) {
+          return userProvisionSuccessMap;
+        }
+        return userProvisionFailureMap;
+	
+	
+    </Source>
+    </Script>
+    <Transition to="Send Email">
+      <Script>
+        <Source>
+        if(userAccountDetails != null &amp;&amp; !userAccountDetails.isEmpty())
+        	return true;
+        else
+        	return false;
+  		</Source>
+      </Script>
+    </Transition>
+    <Transition to="Update Identity"/>
+  </Step>
+  <Step action="call:sendEmail" icon="Default" name="Send Email">
+    <Arg name="userAccountDetails" value="ref:userAccountDetails"/>
+    <Arg name="to">
+      <Script>
+        <Source>
+			import sailpoint.tools.Util;
+          import java.util.ArrayList;
+			
+			return Util.listToCsv(new ArrayList(userAccountDetails.get("emailIds")));
+        </Source>
+      </Script>
+    </Arg>
+    <Arg name="template">
+      <Script>
+        <Source>
+			return userAccountDetails.get("emailTemplate");
+		  </Source>
+      </Script>
+    </Arg>
+    <Arg name="password">
+      <Script>
+        <Source>
+			return userAccountDetails.get("secretValue");
+        </Source>
+      </Script>
+    </Arg>
+    <Arg name="name">
+      <Script>
+        <Source>
+			return userAccountDetails.get("name");
+		</Source>
+      </Script>
+    </Arg>
+    <Transition to="Update Identity"/>
+  </Step>
+  <Step name="Update Identity">
+    <Arg name="userAccountDetails" value="ref:userAccountDetails"/>
+    <Arg name="identityName" value="ref:identityName"/>
+    <Script>
+      <Source>
+		
+			import sailpoint.object.Identity;
+	  
+        System.out.println("**into update details parse project::"+userAccountDetails);
+			Identity identity = context.getObjectByName(Identity.class, identityName);
+			if (identity != null &amp;&amp; !userAccountDetails.isEmpty()) {
+				identity.setAttribute("personStatus", "Active");
+				if (userAccountDetails.get("workflowProcess") != null) {
+					String wfprocess = (String) userAccountDetails.get("workflowProcess");
+					if("FAILED".equalsIgnoreCase(wfprocess)){
+						identity.setAttribute("workflowProcess", "REHIRE FAILED");				
+					}
+				}
+				if (userAccountDetails.get("ad_mail") != null) {
+					String email = (String) userAccountDetails.get("ad_mail");
+					identity.setEmail(email);
+				}
+				if (userAccountDetails.get("ad_sAMAccountName") != null) {
+					String samAccountName = (String) userAccountDetails.get("ad_sAMAccountName");
+					identity.setAttribute("lanId", samAccountName);
+				}
+				if (userAccountDetails.get("ad_userPrincipalName") != null) {
+					String upn = (String) userAccountDetails.get("ad_userPrincipalName");
+					identity.setAttribute("upn", upn);
+				}
+				context.saveObject(identity);
+				context.commitTransaction();
+				context.decache();
+			}	  
+		
+    </Source>
+    </Script>
+    <Transition to="Update Workflow History Table"/>
+  </Step>
+  <Step name="Update Workflow History Table">
+    <Arg name="identityName" value="ref:identityName"/>
+    <Script>
+      <Source>
+	  
+		import java.sql.Connection;
+		import java.sql.DriverManager;
+		import java.sql.PreparedStatement;
+
+		import sailpoint.object.Identity;
+		import sailpoint.tools.GeneralException;
+
+        
+         System.out.println("**into history update details parse project::");
+		if (identityName != null) {
+			Identity identity = context.getObjectByName(Identity.class, identityName);
+			if (identity != null) {
+				try {
+					// create a mysql database connection
+					String myDriver = "com.mysql.jdbc.Driver";
+					String myUrl = "jdbc:mysql://vdxiidpdb:3306/identityiq";
+					Class.forName(myDriver);
+					Connection conn = DriverManager.getConnection(myUrl, "identityiq", "identityiq");
+					String query = " insert into Workflow_History_table (firstname, lastname, middleName, preferredName, employeeNumber, personStatus, lastTransactionType, lastTransactionEffectiveDate, workflowProcess, lanId, email, jobname, costCenterName, costCenterID, managerEmployeeNumber)" + " values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+					PreparedStatement preparedStmt = conn.prepareStatement(query);
+					preparedStmt.setString(1, identity.getFirstname());
+					preparedStmt.setString(2, identity.getLastname());
+					preparedStmt.setString(3, identity.getStringAttribute("middleName"));
+					preparedStmt.setString(4, identity.getDisplayableName());
+					preparedStmt.setString(5, identity.getStringAttribute("employeeNumber"));
+					preparedStmt.setString(6, identity.getStringAttribute("personStatus"));
+					preparedStmt.setString(7, identity.getStringAttribute("lastTransactionType"));
+					preparedStmt.setString(8, identity.getStringAttribute("lastTransactionEffectiveDate"));
+					preparedStmt.setString(9, identity.getStringAttribute("workflowProcess"));
+					preparedStmt.setString(10, identity.getStringAttribute("lanId"));
+					preparedStmt.setString(11, identity.getStringAttribute("email"));
+					preparedStmt.setString(12, identity.getStringAttribute("jobname"));
+					preparedStmt.setString(13, identity.getStringAttribute("costCenterName"));
+					preparedStmt.setString(14, identity.getStringAttribute("costCenterID"));
+					preparedStmt.setString(15, identity.getStringAttribute("managerEmployeeNumber"));
+					preparedStmt.execute();
+					conn.close();
+				} catch (Exception e) {
+					log.error("can't update DB");
+         System.out.println("**error while db insert"+ex.getMessage());
+				}
+			}
+		}	 
+
+	  </Source>
+    </Script>
+    <Transition to="end"/>
+  </Step>
+  <Step icon="Stop" name="end" posX="518" posY="10"/>
+</Workflow>

@@ -1,0 +1,185 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="COH_Rule - Correlation Rule" type="Correlation">
+  <Description>Identity Correlation Rules are used to find identities to which new accounts can be attached.
+
+A correlation rule must return a Map with one of the specified Return arguments.</Description>
+  <Signature returnType="Map">
+    <Inputs>
+      <Argument name="log">
+        <Description>
+          The log object associated with the SailPointContext.
+        </Description>
+      </Argument>
+      <Argument name="context">
+        <Description>
+          A sailpoint.api.SailPointContext object that can be used to query the database if necessary.
+        </Description>
+      </Argument>
+      <Argument name="environment" type="Map">
+        <Description>
+          Arguments passed to the aggregation task.
+        </Description>
+      </Argument>
+      <Argument name="application">
+        <Description>
+          Application being aggregated.
+        </Description>
+      </Argument>
+      <Argument name="account">
+        <Description>
+          A sailpoint.object.ResourceObject returned from the
+          collector.
+        </Description>
+      </Argument>
+      <Argument name="link">
+        <Description>
+          Existing link to this account.
+        </Description>
+      </Argument>
+    </Inputs>
+    <Returns>
+      <Argument name="identityName">
+        <Description>
+          The name of an Identity object.
+        </Description>
+      </Argument>
+      <Argument name="identity">
+        <Description>
+          A fully resolved Identity object if the rule wants
+          to do its own queries to locate the identity.
+        </Description>
+      </Argument>
+      <Argument name="identityAttributeName">
+        <Description>
+          The name of the extended attribute that can be used
+          to locate an existing identity.
+        </Description>
+      </Argument>
+      <Argument name="identityAttributeValue">
+        <Description>
+          The value of the named extended attribute that can be used
+          to locate an existing identity. This attribute is used
+          together with the identityAttributeName argument.
+        </Description>
+      </Argument>
+    </Returns>
+  </Signature>
+  <Source>import java.util.ArrayList;
+  import java.util.HashMap;
+  import java.util.List;
+  import java.util.Map;
+
+  import org.apache.log4j.Logger;
+
+  import sailpoint.api.SailPointContext;
+  import sailpoint.object.Application;
+  import sailpoint.object.Custom;
+  import sailpoint.object.Filter;
+  import sailpoint.object.Identity;
+  import sailpoint.object.QueryOptions;
+  import sailpoint.object.ResourceObject;
+  import sailpoint.tools.GeneralException;
+
+  Logger  logger = Logger.getLogger("sailpoint.custom.manulife.rule.CorrelationRule"); 
+  Logger  logger = Logger.getLogger("sailpoint.api.Identitizer"); 
+  logger.debug("********Starting Correlation - v1 update 1.2");
+
+  String Descr = null;
+  String adEmpID = null;
+  String msDSPrincipalName = null;
+  String userPrincipalNameAtt = null;
+  String departmentName = null;		
+  String sAMAccountName = null;
+  String sAMAccountNameAttr = "";
+  String lanID = "";
+  String employeeIdAttr = "employeeNumber";
+  String lanIdAttr = "lanId";
+// String emailIdAttr = "email";
+
+  Map returnMap = new HashMap ();
+  String appName =  application.getName();
+  String displayName = account.getDisplayName();
+  logger.debug("***Application Name " + appName );
+  logger.debug("***Identity Name " + identityName );
+  logger.debug("***Account name " + displayName);
+				
+  adEmpID = account.getStringAttribute("employeeID");
+  Descr = account.getStringAttribute("description");
+  logger.debug("*** Descriptor attribute value is '" + Descr + "'");
+  
+  msDSPrincipalName = account.getStringAttribute("msDS-PrincipalName");
+  logger.debug("*** msDS-PrincipalName attribute value is '" + msDSPrincipalName + "'");
+  
+  userPrincipalNameAtt = account.getStringAttribute("userPrincipalName");
+  logger.debug("*** userPrincipalName attribute value is '" + userPrincipalNameAtt + "'");
+
+  QueryOptions qo = null;
+  List filterList = null;
+  Filter filter = null;
+  List ids = null;
+  Identity id = null;	
+
+  /* Correlation Logic for SecurityDescriptor matching
+		 * Applicable for AD and non-AD accounts
+	* */	
+   logger.debug("***Starting EmployeeID Matching...");
+   if (null != adEmpID  &amp;&amp;  !(adEmpID.isEmpty())) {		        
+          qo = new QueryOptions();
+          filterList = new ArrayList();
+          filterList.add(Filter.ignoreCase(Filter.eq(employeeIdAttr,adEmpID)));
+          filter = Filter.and(filterList);
+          qo.addFilter(filter);
+          qo.setResultLimit(2);
+          ids = context.getObjects(Identity.class,qo);
+          if (ids.size() == 1) {
+            id = ids.get(0);
+            returnMap.put("identity",id);
+            logger.debug("***Single employeeID Match Found ,a matching emplid: " + id + " -  Account displayName: " + displayName);		                                                
+            return returnMap;
+         } else{
+            return null;
+         }     
+  }	
+  
+  else if (null != Descr  &amp;&amp;  !(Descr.isEmpty())) {	
+  logger.debug("***Starting Descriptor Matching...");  
+    logger.debug("***In Descr check ");
+    String DescrTrim = Descr.trim();
+    logger.debug("***Descriptor : " + Descr);
+    if (DescrTrim.contains(",")) {
+      String[] DescrSplit = DescrTrim.split(",");
+      if (DescrSplit.length &gt;= 3) {
+        String descriptor = DescrSplit[1].trim();		                        
+        logger.debug("***Descriptor value: " + descriptor);
+        String emplID = DescrSplit[2].trim();		                        
+        logger.debug("***EmplID: " + emplID);		                        
+        if (null != emplID ) {
+          qo = new QueryOptions();
+          filterList = new ArrayList();
+          filterList.add(Filter.ignoreCase(Filter.eq(employeeIdAttr,emplID)));
+          filter = Filter.and(filterList);
+          qo.addFilter(filter);
+          qo.setResultLimit(2);
+          ids = context.getObjects(Identity.class,qo);
+          if (ids.size() == 1) {
+            id = ids.get(0);
+            returnMap.put("identity",id);
+            logger.debug("***Single employeeID Match Found ,a matching emplid: " + id + " -  Account displayName: " + displayName);		                                                
+            return returnMap;
+         } else{
+            return null;
+         } 
+        } 
+		}
+		else {
+          logger.debug("***Descriptor not equal to 3. Correlation Rule Returning null...");
+          return null;
+        }
+    }
+  } 
+  else{
+  // TODO
+    }  
+  return returnMap;</Source>
+</Rule>

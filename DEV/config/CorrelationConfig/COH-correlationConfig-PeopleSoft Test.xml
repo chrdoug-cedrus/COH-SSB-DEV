@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE CorrelationConfig PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<CorrelationConfig name="PeopleSoft Test">
+  <AttributeAssignments>
+    <Filter operation="EQ" property="employeeNumber" value="EMPLID"/>
+  </AttributeAssignments>
+</CorrelationConfig>

@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE IdentityTrigger PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<IdentityTrigger handler="sailpoint.api.WorkflowTriggerHandler" name="COH_IdentityTrigger_Joiner" type="Rule">
+  <Description>Process a new employee.</Description>
+  <HandlerParameters>
+    <Attributes>
+      <Map>
+        <entry key="workflow" value="COH_Workflow_Birth_Right_Provisioning"/>
+      </Map>
+    </Attributes>
+  </HandlerParameters>
+  <TriggerRule>
+    <Reference class="sailpoint.object.Rule" name="COH_Rule_IdentityTrigger_Joiner v3"/>
+  </TriggerRule>
+</IdentityTrigger>

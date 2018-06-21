@@ -1,0 +1,209 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE Application PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Application connector="sailpoint.connector.OpenConnectorAdapter" featuresString="PROVISIONING, SYNC_PROVISIONING, UNLOCK, ENABLE, SEARCH" icon="internetIcon" name="COH_DUO" profileClass="" type="Duo">
+  <Attributes>
+    <Map>
+      <entry key="afterProvisioningRule"/>
+      <entry key="authHost"/>
+      <entry key="authIntegrationKey"/>
+      <entry key="authPassword" value="1:BA7QR5zdX15IdpDAUew1Hg=="/>
+      <entry key="beforeProvisioningRule"/>
+      <entry key="compositeDefinition"/>
+      <entry key="connectorClass" value="openconnector.connector.Duo.DuoConnector"/>
+      <entry key="encrypted" value="authPassword"/>
+      <entry key="enrollUserUri" value="/admin/v1/users/enroll"/>
+      <entry key="groupUri" value="/admin/v1/groups"/>
+      <entry key="groups" value="group_id"/>
+      <entry key="host" value="api-c8c18ca3.duosecurity.com"/>
+      <entry key="integrationKey" value="DIWXHDX9J67CT89B0NKJ"/>
+      <entry key="nativeChangeDetectionAttributeScope" value="entitlements"/>
+      <entry key="nativeChangeDetectionAttributes"/>
+      <entry key="nativeChangeDetectionEnabled">
+        <value>
+          <Boolean/>
+        </value>
+      </entry>
+      <entry key="nativeChangeDetectionOperations"/>
+      <entry key="password" value="1:UDiHirzCHQbGPcn3tn/7FCtHy8DP8OXaX4TRp3LKHlfxrrJvNlrTRZuCJwGGtdtL"/>
+      <entry key="phoneUri" value="/admin/v1/phones"/>
+      <entry key="phones" value="number"/>
+      <entry key="sysDescriptions">
+        <value>
+          <Map>
+            <entry key="en_US"/>
+          </Map>
+        </value>
+      </entry>
+      <entry key="templateApplication" value="Duo"/>
+      <entry key="testConnectionUri" value="/admin/v1/integrations"/>
+      <entry key="tokens" value="token_id"/>
+      <entry key="usersUri" value="/admin/v1/users"/>
+    </Map>
+  </Attributes>
+  <Owner>
+    <Reference class="sailpoint.object.Identity" name="spadmin"/>
+  </Owner>
+  <ProvisioningForms>
+    <Form name="account" objectType="account" type="Create">
+      <Attributes>
+        <Map>
+          <entry key="pageTitle" value="account"/>
+        </Map>
+      </Attributes>
+      <Section>
+        <Field displayName="con_prov_policy_duo_user_name" filterString="" helpKey="help_con_prov_policy_duo_user_name" name="username" required="true" type="string"/>
+        <Field displayName="con_prov_policy_duo_email" filterString="" helpKey="help_con_prov_policy_duo_email" name="email" required="true" reviewRequired="true" type="string"/>
+        <Field displayName="con_prov_policy_duo_real_name" filterString="" helpKey="help_con_prov_policy_duo_real_name" name="realname" type="string"/>
+        <Field displayName="con_prov_policy_duo_phone" filterString="" helpKey="help_con_prov_policy_duo_phone" multi="true" name="phones" reviewRequired="true" type="string">
+          <ValidationScript>
+            <Source>
+              import java.util.regex.Matcher;
+              import java.util.regex.Pattern;
+              import java.util.ArrayList;
+              import java.util.List;
+              List errors = null;
+              String re = "(?:\\+?(\\d{1,3}))?[-. (]*(\\d{3})[-. )]*(\\d{3})[-. ]*(\\d{4})";
+              Pattern pattern = Pattern.compile(re);
+              if (phones != null) {
+                  for (String phone: phones) {
+                      if (phone != null) {
+                          Matcher matcher = pattern.matcher(phone);
+                          if (!matcher.matches()) {
+                              if (errors == null) {
+                                  errors = new ArrayList();
+                              }
+                              errors.add(phone + " is not a valid format of phone number");
+                          }   
+                       }
+                  }
+               }
+               return errors;
+</Source>
+          </ValidationScript>
+        </Field>
+      </Section>
+    </Form>
+    <Form name="Enable Account" objectType="account" type="Enable">
+      <Attributes>
+        <Map>
+          <entry key="pageTitle" value="Enable Account"/>
+        </Map>
+      </Attributes>
+      <Section>
+        <Field filterString="" name="status" required="true" reviewRequired="true" type="string">
+          <AllowedValuesDefinition>
+            <Value>
+              <List>
+                <String>active</String>
+                <String>bypass</String>
+              </List>
+            </Value>
+          </AllowedValuesDefinition>
+        </Field>
+        <Field filterString="" name="enableStatus" type="string">
+          <Attributes>
+            <Map>
+              <entry key="hidden" value="true"/>
+            </Map>
+          </Attributes>
+          <Script>
+            <Source>ref:status</Source>
+          </Script>
+        </Field>
+      </Section>
+    </Form>
+    <Form name="Unlock Account" objectType="account" type="Unlock">
+      <Attributes>
+        <Map>
+          <entry key="pageTitle" value="Unlock Account"/>
+        </Map>
+      </Attributes>
+      <Section>
+        <Field filterString="" name="status" required="true" reviewRequired="true" type="string">
+          <AllowedValuesDefinition>
+            <Value>
+              <List>
+                <String>active</String>
+                <String>bypass</String>
+              </List>
+            </Value>
+          </AllowedValuesDefinition>
+        </Field>
+        <Field filterString="" name="enableStatus" type="string">
+          <Attributes>
+            <Map>
+              <entry key="hidden" value="true"/>
+            </Map>
+          </Attributes>
+          <Script>
+            <Source>ref:status</Source>
+          </Script>
+        </Field>
+      </Section>
+    </Form>
+  </ProvisioningForms>
+  <Schemas>
+    <Schema displayAttribute="username" identityAttribute="user_id" instanceAttribute="" nativeObjectType="account" objectType="account">
+      <AttributeDefinition name="username" type="string">
+        <Description>User Name</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="status" remediationModificationType="None" type="string">
+        <Description>User Status</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="email" type="string">
+        <Description>Email ID </Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="user_id" type="string">
+        <Description>User ID </Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="realname" type="string">
+        <Description>Real Name </Description>
+      </AttributeDefinition>
+      <AttributeDefinition multi="true" name="notes" type="string">
+        <Description>Notes </Description>
+      </AttributeDefinition>
+      <AttributeDefinition entitlement="true" managed="true" multi="true" name="groups" remediationModificationType="None" schemaObjectType="group" type="string">
+        <Description>Name of Groups to which the user is connected to</Description>
+      </AttributeDefinition>
+      <AttributeDefinition multi="true" name="phones" type="string">
+        <Description>Phone numbers of Account</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="last_login" type="string">
+        <Description>Last login time of Account</Description>
+      </AttributeDefinition>
+      <AttributeDefinition multi="true" name="tokens" type="string">
+        <Description>Token for the account</Description>
+      </AttributeDefinition>
+      <AttributeDefinition multi="true" name="desktoptokens" type="string">
+        <Description>Desktop tokens for the account</Description>
+      </AttributeDefinition>
+    </Schema>
+    <Schema displayAttribute="name" identityAttribute="group_id" instanceAttribute="" nativeObjectType="group" objectType="group">
+      <AttributeDefinition name="name" type="string">
+        <Description>Group Name</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="desc" type="string">
+        <Description>Group Description</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="status" type="string">
+        <Description>Group Status</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="group_id" type="string">
+        <Description>Group ID</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="voice_enabled" type="boolean">
+        <Description>Voice Enabled Flag</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="sms_enabled" type="boolean">
+        <Description>SMS Enabled Flag</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="mobile_otp_enabled" type="boolean">
+        <Description>Mobile One Time Password Enabled Flag</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="push_enabled" type="boolean">
+        <Description>Push Enabled Flag</Description>
+      </AttributeDefinition>
+    </Schema>
+  </Schemas>
+  <ApplicationScorecard/>
+</Application>

@@ -1,0 +1,10 @@
+--
+-- This script contains DDL statements to upgrade a database schema to
+-- reflect changes to the model.  This file should only be used to
+-- upgrade from the last formal release version to the current code base.
+--
+
+USE identityiq;
+
+update identityiq.spt_database_version set schema_version = '7.2-42' where name = 'main';
+

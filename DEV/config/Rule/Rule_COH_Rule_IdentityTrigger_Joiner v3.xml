@@ -1,0 +1,94 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="COH_Rule_IdentityTrigger_Joiner v3" type="IdentityTrigger">
+  <Description>This rule can be used for Certification Events that use rule triggers. The previousIdentity and newIdentity hold snapshots of the identity before the update has occurred and the state of the identity after the update, respectively.</Description>
+  <Signature returnType="boolean"/>
+  <Source>import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import sailpoint.api.SailPointContext;
+import sailpoint.object.Bundle;
+import sailpoint.object.Filter;
+import sailpoint.object.Identity;
+import sailpoint.object.QueryOptions;
+import sailpoint.tools.GeneralException;
+import org.apache.log4j.Logger;
+import org.apache.log4j.Level;
+  
+  Logger  logger = Logger.getLogger("sailpoint.custom.COH.rule.CorrelationRule"); 
+  Logger  logger = Logger.getLogger("sailpoint.api.Identitizer");
+  logger.setLevel(Level.DEBUG);
+
+
+		log.debug("Starting Joiner Trigger for " + newIdentity.getName());
+		boolean isTrue = false;
+		boolean isHavingBirthRole = false;
+		if (newIdentity != null) {
+			List listOfAssignedRoles = newIdentity.getAssignedRoles();
+			if (listOfAssignedRoles != null &amp;&amp; listOfAssignedRoles.size() &gt; 0) {
+				for (Bundle bundle : listOfAssignedRoles) {
+					if (bundle.getName().equalsIgnoreCase("COH_BUS_Employee_Birthright")) {
+						isHavingBirthRole = true;
+					}
+				}
+			}
+			if (!isHavingBirthRole) {
+				String startDate = newIdentity.getStringAttribute("startDate");
+				boolean checkDate = false;
+				if (startDate != null) {
+					SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+					try {
+						Date startedDate = sdf.parse(startDate);
+						Date todayDate = new Date();
+						startedDate = sailpoint.tools.Util.getBeginningOfDay(startedDate);
+						todayDate = sailpoint.tools.Util.getBeginningOfDay(todayDate);
+logger.debug("StartDate:   " + startedDate);
+logger.debug("diff " + Integer.toString(sailpoint.tools.Util.getDaysDifference(startedDate, todayDate)));
+						if (todayDate.equals(startedDate)) {
+							checkDate = true;
+						} else if (startedDate.after(todayDate)) {							
+int diff = sailpoint.tools.Util.getDaysDifference(startedDate, todayDate);
+						
+log.debug("diff " + diff);
+							if (diff &gt;= 0 &amp;&amp; diff &lt; 15) {
+								checkDate = true;
+							}
+						}
+						else if (todayDate.after(startedDate)) {							
+                         int diff = sailpoint.tools.Util.getDaysDifference(todayDate, startedDate);
+						
+                              log.debug("diff " + diff);
+							if (diff &gt;= 0 &amp;&amp; diff &lt; 15) {
+								checkDate = true;
+							}
+						}
+					} catch (ParseException e) {
+						throw new GeneralException("Date can't be parsed");
+					}
+				}
+				log.debug("checkDate " + checkDate);
+				if (checkDate) {
+					String lastTransactionType = newIdentity.getStringAttribute("lastTransactionType");
+					String employeeNumber = newIdentity.getStringAttribute("employeeNumber");
+					String lanID = newIdentity.getStringAttribute("lanID");
+					String personStatus = newIdentity.getStringAttribute("personStatus");
+					String workflowProcess = newIdentity.getStringAttribute("workflowProcess");
+					if (lastTransactionType != null &amp;&amp; startDate != null &amp;&amp; employeeNumber != null) {
+						if (lastTransactionType.equalsIgnoreCase("A")) {
+							if (lanID == null) {
+								if (workflowProcess == null || workflowProcess.equalsIgnoreCase("FAILED") || workflowProcess.equalsIgnoreCase("NONE") )  {
+									isTrue = true;
+								} 
+							}
+						}
+					}
+				}
+			}
+		}
+log.debug("Ending Joiner Trigger " + isTrue);
+return isTrue;</Source>
+</Rule>

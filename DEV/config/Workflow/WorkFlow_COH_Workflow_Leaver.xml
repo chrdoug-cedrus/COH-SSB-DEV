@@ -1,0 +1,505 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE Workflow PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Workflow explicitTransitions="true" handler="sailpoint.api.StandardWorkflowHandler" libraries="Identity" name="COH_Workflow_Leaver" type="IdentityLifecycle">
+  <Variable initializer="true" name="trace">
+    <Description>Used for debugging this workflow and when set to true trace
+			will be sent to stdout.</Description>
+  </Variable>
+  <Variable name="userAccountDetails"/>
+  <Variable input="true" name="trigger">
+    <Description>The IdentityTrigger</Description>
+  </Variable>
+  <Variable input="true" name="event" transient="true">
+    <Description>The IdentityChangeEvent.  It can be used to build
+      the provisioning plan, but does not need to be
+      persisted with the case, so marked as transient.</Description>
+  </Variable>
+  <Variable input="true" name="identityName">
+    <Description>The name of the identity.</Description>
+  </Variable>
+  <Variable input="true" name="flow">
+    <Description>The name of the LCM flow that launched this workflow.</Description>
+  </Variable>
+  <Variable name="project">
+    <Description>ProvisioningProject which is just a compiled version of the ProvisioningPlan.</Description>
+  </Variable>
+  <Variable initializer="Create" name="operation">
+    <Description>Name of the Application</Description>
+  </Variable>
+  <Variable name="plan"/>
+  <Variable initializer="true" name="transient"/>
+  <Description>Process a new employee.</Description>
+  <Step icon="Start" name="Start" posX="28" posY="10">
+    <Transition to="Modify Identity"/>
+  </Step>
+  <Step name="Modify Identity" posX="98" posY="10">
+    <Arg name="identityName" value="ref:identityName"/>
+    <Script>
+      <Source>
+
+	  import sailpoint.object.Identity;
+	  
+		if ( identityName != null) {
+			Identity identity = context.getObjectByName(Identity.class, identityName);
+			if (identity != null) {
+				identity.setAttribute("workflowProcess", "LEAVER " + new Date());
+        identity.setInactive(true);				
+				context.saveObject(identity);
+				context.commitTransaction();
+				context.decache();
+			}
+		}	  
+	  
+    </Source>
+    </Script>
+    <Transition to="Build Plan for leaver"/>
+  </Step>
+  <Step name="Build Plan for leaver" posX="248" posY="10" resultVariable="plan">
+    <Script>
+      <Source>
+		
+import sailpoint.api.IdentityService;
+		import sailpoint.api.SailPointContext;
+		import sailpoint.object.AbstractCertifiableEntity;
+		import sailpoint.object.Application;
+		import sailpoint.object.Certifiable;
+		import sailpoint.object.EntitlementSnapshot;
+		import sailpoint.object.Filter;
+		import sailpoint.object.Identity;
+		import sailpoint.object.Link;
+		import sailpoint.object.ManagedAttribute;
+		import sailpoint.object.QueryOptions;
+    import sailpoint.object.ProvisioningPlan;
+		import sailpoint.object.ProvisioningPlan.AccountRequest;
+		import sailpoint.tools.GeneralException;
+        
+			public ProvisioningPlan createLeaverPlan(String identityName) {
+			   
+				ProvisioningPlan plan = new ProvisioningPlan();
+				
+				//AccountRequest to remove existing Roles
+				AccountRequest request = new AccountRequest();
+				request.setApplication("IIQ");
+				request.setNativeIdentity(identityName);
+				request.setOperation(AccountRequest.Operation.Modify);
+				request.add(new AttributeRequest("assignedRoles", ProvisioningPlan.Operation.Remove, "COH_BUS_Employee_Birthright"));
+				//plan.add(request);
+
+                //AccountRequest to disable Active Directory
+				
+				Identity identity = context.getObjectByName(Identity.class, identityName);
+        List listOfAppLinks = identity.getLinks();
+				for(Link appLink : listOfAppLinks){
+          String appName = appLink.getApplicationName();
+					Application application = context.getObjectByName(Application.class, appName);
+					if ((identity != null &amp;&amp; application != null) &amp;&amp;
+ !(appName.equalsIgnoreCase("COH_PeopleSoft_HR")|| appName.equalsIgnoreCase("COH_PeopleSoft_Test") || appName.equalsIgnoreCase("COH_PeopleSoft_Cleanup"))){
+						IdentityService idService = new IdentityService(context);
+						List listOfLinks = idService.getLinks(identity, application);
+						if (sailpoint.tools.Util.nullSafeSize(listOfLinks) &gt; 0) {
+							for (Link link : sailpoint.tools.Util.safeIterable(listOfLinks)) {
+        				log.error("Provisioning App RR  ::; " + link.getApplicationName());
+								AccountRequest acRequest = new AccountRequest();
+								acRequest.setApplication(link.getApplicationName());
+								acRequest.setOperation(AccountRequest.Operation.Disable);
+								acRequest.setNativeIdentity(link.getNativeIdentity());
+								plan.add(acRequest);
+							}
+						}
+					}
+                }	
+        	log.error("Exiting Provisioning App RR  ::; ");
+				return plan;
+			}
+			
+			return createLeaverPlan(identityName);
+      </Source>
+    </Script>
+    <Transition to="ActiveDirectory Provisioning"/>
+  </Step>
+  <Step name="ActiveDirectory Provisioning" posX="446" posY="10">
+    <Arg name="identityEmailTemplate"/>
+    <Arg name="enableRetryRequest"/>
+    <Arg name="securityOfficerElectronicSignature"/>
+    <Arg name="fallbackApprover"/>
+    <Arg name="endOnManualWorkItems"/>
+    <Arg name="userEmailTemplate"/>
+    <Arg name="policiesToCheck"/>
+    <Arg name="workItemComments"/>
+    <Arg name="project"/>
+    <Arg name="identityRequestId"/>
+    <Arg name="approvalSplitPoint"/>
+    <Arg name="source"/>
+    <Arg name="identityDisplayName"/>
+    <Arg name="foregroundProvisioning" value="false"/>
+    <Arg name="ownerElectronicSignature"/>
+    <Arg name="batchRequestItemId"/>
+    <Arg name="splitPlans"/>
+    <Arg name="doRefresh"/>
+    <Arg name="plan" value="ref:plan"/>
+    <Arg name="flow"/>
+    <Arg name="identityElectronicSignature"/>
+    <Arg name="identityName" value="ref:identityName"/>
+    <Arg name="approvalSet"/>
+    <Arg name="violationReviewDecision"/>
+    <Arg name="filterRejects"/>
+    <Arg name="splitProjects"/>
+    <Arg name="requesterEmailTemplate"/>
+    <Arg name="approvalEmailTemplate"/>
+    <Arg name="ticketManagementApplication"/>
+    <Arg name="securityOfficerName"/>
+    <Arg name="approvingIdentities"/>
+    <Arg name="managerEmailTemplate"/>
+    <Arg name="ticketId"/>
+    <Arg name="approvalScheme" value="none"/>
+    <Arg name="allowRequestsWithViolations"/>
+    <Arg name="workItemPriority"/>
+    <Arg name="managerElectronicSignature"/>
+    <Arg name="requireViolationReviewComments"/>
+    <Arg name="splitApprovalSet"/>
+    <Arg name="approvalMode"/>
+    <Arg name="trace"/>
+    <Arg name="endOnProvisioningForms"/>
+    <Arg name="splitWorkItemComments"/>
+    <Arg name="notificationScheme" value="none"/>
+    <Arg name="policyViolations"/>
+    <Arg name="policyScheme"/>
+    <Arg name="setPreviousApprovalDecisions"/>
+    <Arg name="optimisticProvisioning"/>
+    <Arg name="securityOfficerEmailTemplate"/>
+    <Return name="project" to="project"/>
+    <WorkflowRef>
+      <Reference class="sailpoint.object.Workflow" name="LCM Provisioning"/>
+    </WorkflowRef>
+    <Transition to="Send Failure Email"/>
+    <Transition to="Send Email"/>
+  </Step>
+  <Step action="call:sendEmail" icon="Default" name="Send Email" posX="1030" posY="10">
+    <Arg name="template" value="EmailTemplate_LifeCycleEvent_BirthRight_Completion_Notification"/>
+    <Arg name="password">
+      <Script>
+        <Source>
+        import sailpoint.object.Identity;
+        log.error("userAccountDetails Map in send Email ::: "+userAccountDetails);
+        String password= userAccountDetails.get("secretValue");
+        return password;
+        </Source>
+      </Script>
+    </Arg>
+    <Arg name="manager">
+      <Script>
+        <Source>
+        import sailpoint.object.Identity;
+        log.error("userAccountDetails Map in send Email ::: "+userAccountDetails);
+        String nativeIdentity= userAccountDetails.get("nativeIdentity");
+        Identity id=context.getObjectByName(Identity.class,nativeIdentity);
+          if(id !=null)
+          {
+          	if(id.getManager() !=null)
+          	{
+          	String managerName=id.getManager().getDisplayableName();
+            return managerName;
+            }
+          	
+          }
+        </Source>
+      </Script>
+    </Arg>
+    <Arg name="userAccountDetails" value="ref:userAccountDetails"/>
+    <Arg name="name">
+      <Script>
+        <Source>
+        import sailpoint.object.Identity;
+        log.error("userAccountDetails Map in send Email ::: "+userAccountDetails);
+       String nativeIdentity= userAccountDetails.get("nativeIdentity");
+        Identity identity=context.getObjectByName(Identity.class,nativeIdentity);
+         if(identity !=null)
+            {
+            	return identity.getDisplayableName();
+            }
+        </Source>
+      </Script>
+    </Arg>
+    <Arg name="language">
+      <Script>
+        <Source>
+        import sailpoint.object.Identity;
+        log.error("userAccountDetails Map in send Email ::: "+userAccountDetails);
+        String nativeIdentity= userAccountDetails.get("nativeIdentity");
+        Identity id=context.getObjectByName(Identity.class,nativeIdentity);
+          if(id !=null)
+          {
+          	if(id.getManager() !=null)
+          	{
+          	String managerName=id.getManager().getStringAttribute("preferredLanguage");
+            return managerName;
+            }
+          	
+          }
+        </Source>
+      </Script>
+    </Arg>
+    <Arg name="to">
+      <Script>
+        <Source>
+		import sailpoint.object.Identity;
+		import sailpoint.object.Custom;
+		import sailpoint.tools.Util;
+		
+		
+		Identity identity = context.getObjectByName(Identity.class, identityName);
+		log.error("identity is there :::     " + identity);
+		if (identity != null) {
+			Identity managerId = identity.getManager();
+			log.error("managerId ::: " + managerId);
+			if (managerId != null) {
+				log.error("managerId.getEmail() :: " + managerId.getEmail());
+				Custom custObj = context.getObject(Custom.class, "Custom");
+				if (custObj != null) {
+					String defaultManager = custObj.getString("IIQ_defaultManager");
+					log.error("defaultManager from Custom ::; " + defaultManager);
+					if (defaultManager != null) {
+						// default owner if no manager
+						Identity ownerToCopyMail = context.getObjectByName(Identity.class, defaultManager);
+						QueryOptions qo = new QueryOptions();
+						qo.addFilter(Filter.eq("workgroups.name", defaultManager));
+						List identitiesList = context.getObjects(Identity.class, qo);
+						log.error("List of Identities:: " + identitiesList);
+						List emailList = new ArrayList();
+						if (identitiesList != null) {
+							for (Identity id : identitiesList) {
+								String email = id.getEmail();
+								if (email != null) {
+									emailList.add(email);
+								}
+							}
+						}
+            emailList.add(managerId.getEmail());
+						String csv = sailpoint.tools.Util.listToCsv(emailList);
+						return csv;
+					}
+				}
+			}          
+				return managerId.getEmail();
+			} 
+        </Source>
+      </Script>
+    </Arg>
+    <Transition to="Update Identity"/>
+  </Step>
+  <Step name="Update Identity" posX="1296" posY="10">
+    <Arg name="identityName" value="ref:identityName"/>
+    <Arg name="userAccountDetails" value="ref:userAccountDetails"/>
+    <Script>
+      <Source>
+
+	  import sailpoint.object.Identity;
+	  
+		if (userAccountDetails != null &amp;&amp; identityName != null) {
+			Identity identity = context.getObjectByName(Identity.class, identityName);
+			if (identity != null) {
+				//identity.setAttribute("workflowProcess", "Leaver " + new Date());
+				identity.setAttribute("personStatus", "Active");
+				if (userAccountDetails.get("ad_mail") != null) {
+					String email = (String) userAccountDetails.get("ad_mail");
+					identity.setEmail(email);
+				}
+				if (userAccountDetails.get("ad_sAMAccountName") != null) {
+					String samAccountName = (String) userAccountDetails.get("ad_sAMAccountName");
+					identity.setAttribute("lanId", samAccountName);
+				}
+				if (userAccountDetails.get("ad_userPrincipalName") != null) {
+					String upn = (String) userAccountDetails.get("ad_userPrincipalName");
+					identity.setAttribute("upn", upn);
+				}
+				context.saveObject(identity);
+        context.commitTransaction();
+				context.decache();
+			}
+		}	  
+	  
+    </Source>
+    </Script>
+    <Transition to="Update Workflow History Table"/>
+  </Step>
+  <Step name="Update Workflow History Table" posX="1446" posY="10">
+    <Arg name="identityName" value="ref:identityName"/>
+    <Script>
+      <Source>
+	  
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+
+import sailpoint.object.Identity;
+import sailpoint.tools.GeneralException;
+
+
+		if (identityName != null) {
+			Identity identity = context.getObjectByName(Identity.class, identityName);
+			if (identity != null) {
+				try {
+					// create a mysql database connection
+					String myDriver = "com.mysql.jdbc.Driver";
+					String myUrl = "jdbc:mysql://vdxiidpdb:3306/identityiq";
+					Class.forName(myDriver);
+					Connection conn = DriverManager.getConnection(myUrl, "identityiq", "identityiq");
+					String query = " insert into workflow_history_table (firstname, lastname, middleName, preferredName, employeeNumber, personStatus, lastTransactionType, lastTransactionEffectiveDate, workflowProcess, lanId, email, jobname, costCenterName, costCenterID, managerEmployeeNumber)" + " values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+					PreparedStatement preparedStmt = conn.prepareStatement(query);
+					preparedStmt.setString(1, identity.getFirstname());
+					preparedStmt.setString(2, identity.getLastname());
+					preparedStmt.setString(3, identity.getStringAttribute("middleName"));
+					preparedStmt.setString(4, identity.getDisplayableName());
+					preparedStmt.setString(5, identity.getStringAttribute("employeeNumber"));
+					preparedStmt.setString(6, identity.getStringAttribute("personStatus"));
+					preparedStmt.setString(7, identity.getStringAttribute("lastTransactionType"));
+					preparedStmt.setString(8, identity.getStringAttribute("lastTransactionEffectiveDate"));
+					preparedStmt.setString(9, identity.getStringAttribute("workflowProcess"));
+					preparedStmt.setString(10, identity.getStringAttribute("lanId"));
+					preparedStmt.setString(11, identity.getStringAttribute("email"));
+					preparedStmt.setString(12, identity.getStringAttribute("jobname"));
+					preparedStmt.setString(13, identity.getStringAttribute("costCenterName"));
+					preparedStmt.setString(14, identity.getStringAttribute("costCenterID"));
+					preparedStmt.setString(15, identity.getStringAttribute("managerEmployeeNumber"));
+					preparedStmt.execute();
+					conn.close();
+				} catch (Exception e) {
+					log.error("can't update DB");
+				}
+			}
+		}	 
+
+	  </Source>
+    </Script>
+    <Transition to="end"/>
+  </Step>
+  <Step name="Update Workflow History Table with failure status" posX="874" posY="126">
+    <Arg name="identityName" value="ref:identityName"/>
+    <Script>
+      <Source>
+	  
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+
+import sailpoint.object.Identity;
+import sailpoint.tools.GeneralException;
+
+
+		if (identityName != null) {
+			Identity identity = context.getObjectByName(Identity.class, identityName);
+			
+			
+			if (identity != null) {
+			
+			
+				identity.setAttribute("workflowProcess", "FAILED" );				
+				context.saveObject(identity);
+				context.commitTransaction();
+				context.decache();		
+				
+				try {
+					// create a mysql database connection
+					String myDriver = "com.mysql.jdbc.Driver";
+					String myUrl = "jdbc:mysql://vdxiidpdb:3306/identityiq";
+					Class.forName(myDriver);
+					Connection conn = DriverManager.getConnection(myUrl, "identityiq", "identityiq");
+					String query = " insert into workflow_history_table (firstname, lastname, middleName, preferredName, employeeNumber, personStatus, lastTransactionType, lastTransactionEffectiveDate, workflowProcess, lanId, email, jobname, costCenterName, costCenterID, managerEmployeeNumber)" + " values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+					PreparedStatement preparedStmt = conn.prepareStatement(query);
+					preparedStmt.setString(1, identity.getFirstname());
+					preparedStmt.setString(2, identity.getLastname());
+					preparedStmt.setString(3, identity.getStringAttribute("middleName"));
+					preparedStmt.setString(4, identity.getDisplayableName());
+					preparedStmt.setString(5, identity.getStringAttribute("employeeNumber"));
+					preparedStmt.setString(6, identity.getStringAttribute("personStatus"));
+					preparedStmt.setString(7, identity.getStringAttribute("lastTransactionType"));
+					preparedStmt.setString(8, identity.getStringAttribute("lastTransactionEffectiveDate"));
+					preparedStmt.setString(9, identity.getStringAttribute("workflowProcess"));
+					preparedStmt.setString(10, identity.getStringAttribute("lanId"));
+					preparedStmt.setString(11, identity.getStringAttribute("email"));
+					preparedStmt.setString(12, identity.getStringAttribute("jobname"));
+					preparedStmt.setString(13, identity.getStringAttribute("costCenterName"));
+					preparedStmt.setString(14, identity.getStringAttribute("costCenterID"));
+					preparedStmt.setString(15, identity.getStringAttribute("managerEmployeeNumber"));
+					preparedStmt.execute();
+					conn.close();
+				} catch (Exception e) {
+					log.error("can't update DB");
+				}
+			}
+		}	 
+
+	  </Source>
+    </Script>
+    <Transition to="end"/>
+  </Step>
+  <Step action="call:sendEmail" icon="Default" name="Send Failure Email" posX="700" posY="126">
+    <Arg name="template" value="EmailTemplate_LifeCycleEvent_BirthRight_Failure_Notification"/>
+    <Arg name="name">
+      <Script>
+        <Source>
+        import sailpoint.object.Identity;
+          
+       
+        Identity identity=context.getObjectByName(Identity.class,identityName);
+         if(identity !=null)
+            {
+            	return identity.getDisplayableName();
+            }
+        </Source>
+      </Script>
+    </Arg>
+    <Arg name="to">
+      <Script>
+        <Source>
+import sailpoint.api.SailPointContext;
+import sailpoint.connector2.Log;
+import sailpoint.object.Custom;
+import sailpoint.object.Filter;
+import sailpoint.object.Identity;
+import sailpoint.object.ProvisioningProject;
+import sailpoint.object.QueryOptions;
+		
+		
+		Identity identity = context.getObjectByName(Identity.class, identityName);
+		log.error("identity is there :::     " + identity);
+		if (identity != null) {
+			Identity managerId = identity.getManager();
+			log.error("managerId ::: " + managerId);
+			if (managerId != null) {
+				log.error("managerId.getEmail() :: " + managerId.getEmail());
+				Custom custObj = context.getObject(Custom.class, "Custom");
+				if (custObj != null) {
+					String defaultManager = custObj.getString("IIQ_defaultManager");
+					log.error("defaultManager from Custom ::; " + defaultManager);
+					if (defaultManager != null) {
+						// default owner if no manager
+						Identity ownerToCopyMail = context.getObjectByName(Identity.class, defaultManager);
+						QueryOptions qo = new QueryOptions();
+						qo.addFilter(Filter.eq("workgroups.name", defaultManager));
+						List identitiesList = context.getObjects(Identity.class, qo);
+						log.error("List of Identities:: " + identitiesList);
+						List emailList = new ArrayList();
+						if (identitiesList != null) {
+							for (Identity id : identitiesList) {
+								String email = id.getEmail();
+								if (email != null) {
+									emailList.add(email);
+								}
+							}
+						}
+            emailList.add(managerId.getEmail());
+						String csv = sailpoint.tools.Util.listToCsv(emailList);
+						return csv;
+					}
+				}
+			}          
+				return managerId.getEmail();
+			} 
+        </Source>
+      </Script>
+    </Arg>
+    <Transition to="Update Workflow History Table with failure status"/>
+  </Step>
+  <Step icon="Stop" name="end" posX="1708" posY="10"/>
+</Workflow>

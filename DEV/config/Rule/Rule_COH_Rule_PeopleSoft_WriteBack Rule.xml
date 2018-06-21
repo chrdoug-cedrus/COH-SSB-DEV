@@ -1,0 +1,98 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="COH_PeopleSoft_WriteBack Rule" type="JDBCProvision">
+  <Description>This rule is used by the JDBC connector to do provisioning of the data .</Description>
+  <Signature returnType="ProvisioningResult">
+    <Inputs>
+      <Argument name="log">
+        <Description>
+          The log object associated with the SailPointContext.
+        </Description>
+      </Argument>
+      <Argument name="context">
+        <Description>
+          A sailpoint.api.SailPointContext object that can be used to query the database if necessary.
+        </Description>
+      </Argument>
+      <Argument name="application">
+        <Description>
+                The application whose data file is being processed.
+                </Description>
+      </Argument>
+      <Argument name="schema">
+        <Description>
+                The Schema currently in use.
+                </Description>
+      </Argument>
+      <Argument name="connection">
+        <Description>
+                A connection object to connect to database.
+                </Description>
+      </Argument>
+      <Argument name="plan">
+        <Description>
+                The ProvisioningPlan created against the JDBC application.
+                </Description>
+      </Argument>
+    </Inputs>
+    <Returns>
+      <Argument name="result">
+        <Description>
+                A Provisioning Result object is desirable to return the status.IT can be a new object or part of  Provisioning Plan
+                </Description>
+      </Argument>
+    </Returns>
+  </Signature>
+  <Source>import sailpoint.object.Application;
+import sailpoint.tools.Util;
+import org.apache.log4j.Logger;
+import org.apache.log4j.Level;
+import sailpoint.object.Identity;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import sailpoint.tools.GeneralException;
+  
+ Logger  logger = Logger.getLogger("sailpoint.custom.COH.provisioning.rule.PeopleSoft"); 
+ Logger  logger = Logger.getLogger("sailpoint.api.Identitizer 1.0");
+ logger.setLevel(Level.DEBUG); 
+
+ logger.debug("****PeopleSoft Write Back:::::**********  :");
+
+ logger.debug("**** Plan field values :::::::**********  :" + context);
+ Identity identity = plan.getIdentity();  
+ //String identityName = identity.getName(); 
+ String emid = application.getAttributeValue("EmployeeID");
+ logger.debug("****Fields for PeopleSoft Database to update :::::::**********  :" );
+ logger.debug("****Email :::::::**********  :" + identity.getAttribute("email"));
+ logger.debug("**** Lan ID:::::::**********  :" +identity.getAttribute("lanId"));
+ logger.debug("*****************************************************  :");
+ if (identity != null) {
+	try {
+		Connection conn = null;
+		String url = "jdbc:oracle:thin:@ptxerpoda-scn:1521:PSHCMTST";
+		String driver = "oracle.jdbc.driver.OracleDriver";
+		String userName = "IAMUSER";
+		String password = "iamcohhcm ";
+
+		Class.forName(driver);
+		conn = DriverManager.getConnection(url, userName, password);
+		logger.debug("*******Connected to the database!!! ************************************  :");
+
+	//	"UPDATE SYSADM.PS_COH_IAM_EMP " +   "  SET EMAIL_ADDR = ? " +  ", USER_OPRID= ?";
+	//	UPDATE SYSADM.PS_COH_IAM_EMP SET EMAIL_ADDR='aplump@coh.org', USER_OPRID='cohbri\aplump' WHERE EMPLID = '201507';
+	//	String query = "UPDATE SYSADM.PS_COH_IAM_EMP " +   "  SET EMAIL_ADDR = ? " +  ", USER_OPRID= ?";
+String query = "UPDATE SYSADM.PS_COH_IAM_EMP " +   "  SET EMAIL_ADDR = ? " +  ", USER_OPRID= ?"+ " WHERE EMPLID = ? ";
+		PreparedStatement preparedStmt = conn.prepareStatement(query);
+		preparedStmt.setString(1, identity.getAttribute("email"));
+		preparedStmt.setString(2, identity.getAttribute("lanId"));
+                preparedStmt.setString(3, identity.getAttribute("employeeNumber"));		
+		preparedStmt.execute();
+		conn.close();
+	} catch (Exception e) {
+		logger.error("cannot update PeopleSoft DB for WriteBack");
+	}
+ }
+
+ logger.debug("*****Database successfully updated*******************");</Source>
+</Rule>

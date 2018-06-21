@@ -1,0 +1,155 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE Application PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Application connector="sailpoint.connector.JDBCConnector" featuresString="DISCOVER_SCHEMA, PROVISIONING, SYNC_PROVISIONING, DIRECT_PERMISSIONS, SEARCH, ENABLE, UNLOCK" icon="databaseIcon" name="COH_DSX_Badge" profileClass="" type="JDBC">
+  <AccountCorrelationConfig>
+    <Reference class="sailpoint.object.CorrelationConfig" name="COH_CorrelationConfig_Badge"/>
+  </AccountCorrelationConfig>
+  <Attributes>
+    <Map>
+      <entry key="SQL" value="SELECT &#xd;&#xa;    t1.EmployeeID , t1.LName, t1.FName, t1.Code, t1.Status, t1.StartDate, t1.StopDate, t1.InternalID ,t2.AccessGroupName&#xd;&#xa;FROM &#xd;&#xa;    ACSImport..view_employeeinfo t1&#xd;&#xa;JOIN &#xd;&#xa;    ACSImport..view_accessgroupinfo t2&#xd;&#xa;ON&#xd;&#xa;    t1.EmployeeID=t2.EmployeeID;"/>
+      <entry key="acctAggregationEnd">
+        <value>
+          <Date>1526054540198</Date>
+        </value>
+      </entry>
+      <entry key="acctAggregationStart">
+        <value>
+          <Date>1526054435964</Date>
+        </value>
+      </entry>
+      <entry key="afterProvisioningRule"/>
+      <entry key="aggregationMode">
+        <value>
+          <Boolean/>
+        </value>
+      </entry>
+      <entry key="beforeProvisioningRule" value="COH_Rule_Badge Rule"/>
+      <entry key="compositeDefinition"/>
+      <entry key="deltaTable"/>
+      <entry key="disableOrderingCheck" value="true"/>
+      <entry key="driverClass" value="net.sourceforge.jtds.jdbc.Driver"/>
+      <entry key="getDeltaSQL"/>
+      <entry key="indexColumns">
+        <value>
+          <List>
+            <String>EmployeeID</String>
+          </List>
+        </value>
+      </entry>
+      <entry key="isPermissionEnabled">
+        <value>
+          <Boolean/>
+        </value>
+      </entry>
+      <entry key="mergeColumns">
+        <value>
+          <List>
+            <String>AccessGroupName</String>
+          </List>
+        </value>
+      </entry>
+      <entry key="mergeRows">
+        <value>
+          <Boolean>true</Boolean>
+        </value>
+      </entry>
+      <entry key="nativeChangeDetectionAttributeScope" value="entitlements"/>
+      <entry key="nativeChangeDetectionAttributes"/>
+      <entry key="nativeChangeDetectionEnabled">
+        <value>
+          <Boolean/>
+        </value>
+      </entry>
+      <entry key="nativeChangeDetectionOperations"/>
+      <entry key="partitionMode">
+        <value>
+          <Boolean/>
+        </value>
+      </entry>
+      <entry key="partitionStatements"/>
+      <entry key="password" value="1:I22ftp+SKCj/HeEXcHqTCw=="/>
+      <entry key="provisionRule" value="globalRule"/>
+      <entry key="sysDescriptions">
+        <value>
+          <Map>
+            <entry key="en_US"/>
+          </Map>
+        </value>
+      </entry>
+      <entry key="templateApplication" value="JDBC Template"/>
+      <entry key="testConnSQL" value="SELECT &#xd;&#xa;    t1.EmployeeID , t1.LName, t1.FName, t1.Code, t1.Status, t1.StartDate, t1.StopDate, t1.InternalID ,t2.AccessGroupName&#xd;&#xa;FROM &#xd;&#xa;    ACSImport..view_employeeinfo t1&#xd;&#xa;JOIN &#xd;&#xa;    ACSImport..view_accessgroupinfo t2&#xd;&#xa;ON&#xd;&#xa;    t1.EmployeeID=t2.EmployeeID;"/>
+      <entry key="url" value="jdbc:jtds:sqlserver://SQLPROD2k/AcsImport"/>
+      <entry key="useExecuteQuery">
+        <value>
+          <Boolean/>
+        </value>
+      </entry>
+      <entry key="useStoredProcedureDelta">
+        <value>
+          <Boolean/>
+        </value>
+      </entry>
+      <entry key="useStoredProcedureDirectPermission">
+        <value>
+          <Boolean/>
+        </value>
+      </entry>
+      <entry key="useStoredProcedureGetObject">
+        <value>
+          <Boolean/>
+        </value>
+      </entry>
+      <entry key="useStoredProcedurePartition">
+        <value>
+          <Boolean/>
+        </value>
+      </entry>
+      <entry key="useStoredProcedureSqlStmt">
+        <value>
+          <Boolean/>
+        </value>
+      </entry>
+      <entry key="useStoredProcedureTestConn">
+        <value>
+          <Boolean/>
+        </value>
+      </entry>
+      <entry key="user" value="AcsImpDatUsr"/>
+    </Map>
+  </Attributes>
+  <Owner>
+    <Reference class="sailpoint.object.Identity" name="spadmin"/>
+  </Owner>
+  <Schemas>
+    <Schema displayAttribute="EmployeeID" identityAttribute="EmployeeID" instanceAttribute="" nativeObjectType="account" objectType="account" permissionsRemediationModificationType="None">
+      <AttributeDefinition name="EmployeeID" type="string">
+        <Description/>
+      </AttributeDefinition>
+      <AttributeDefinition name="LName" type="string">
+        <Description/>
+      </AttributeDefinition>
+      <AttributeDefinition name="FName" type="string">
+        <Description/>
+      </AttributeDefinition>
+      <AttributeDefinition name="Code" type="string">
+        <Description/>
+      </AttributeDefinition>
+      <AttributeDefinition name="Status" type="string">
+        <Description/>
+      </AttributeDefinition>
+      <AttributeDefinition name="StartDate" type="string">
+        <Description/>
+      </AttributeDefinition>
+      <AttributeDefinition name="StopDate" type="string">
+        <Description/>
+      </AttributeDefinition>
+      <AttributeDefinition name="InternalID" type="string">
+        <Description/>
+      </AttributeDefinition>
+      <AttributeDefinition entitlement="true" managed="true" multi="true" name="AccessGroupName" type="string">
+        <Description/>
+      </AttributeDefinition>
+    </Schema>
+  </Schemas>
+  <ApplicationScorecard/>
+</Application>

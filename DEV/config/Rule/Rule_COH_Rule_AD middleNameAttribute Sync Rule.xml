@@ -1,0 +1,38 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="COH_Rule_AD middleNameAttribute Sync Rule" type="IdentityAttributeTarget">
+  <Description>Identity attribute target rules are used to tranform identity attribute values that are being pushed to targets.</Description>
+  <Signature returnType="Object"/>
+  <Source>import sailpoint.object.Identity;
+import sailpoint.object.Application;
+import sailpoint.tools.Util;
+import sailpoint.object.Link;
+import sailpoint.object.Attributes;
+import org.apache.log4j.Logger;
+import org.apache.log4j.Level;
+  
+  Logger  logger = Logger.getLogger("sailpoint.custom.COH.rule.CorrelationRule"); 
+  Logger  logger = Logger.getLogger("sailpoint.api.Identitizer");
+  logger.setLevel(Level.DEBUG); 
+
+  String applicationName = "COH Active Directory Test";
+//  String appName  =  app.getName();
+     logger.debug("******AD Sync Rule for Attributes ***");
+     List links = identity.getLinks();
+			if(links != null) {   
+				for(Link link : links) {  
+					if(link.getApplicationName().equalsIgnoreCase(applicationName)) {
+					      Attributes adAttribute = link.getAttributes();
+						  String syncAttribute = adAttribute.getString("division");
+		if(!syncAttribute.isEmpty() &amp;&amp; syncAttribute != null &amp;&amp; syncAttribute.equalsIgnoreCase("IAMHOPE-IIQ")){
+      logger.debug(" AD Sync for middleName" +value);
+   //    logger.debug("********appName send to AD actual value   " + value);
+
+						  return value;
+                                              }
+					}
+				}
+
+            }
+  //return " ";</Source>
+</Rule>

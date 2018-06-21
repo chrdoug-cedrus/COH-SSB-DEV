@@ -1,0 +1,733 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE Application PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Application connector="sailpoint.connector.ForceConnector" featuresString="SEARCH, ENABLE, PROVISIONING, DIRECT_PERMISSIONS, SYNC_PROVISIONING, PASSWORD" icon="internetIcon" name="COH_SalesForce_Test" profileClass="" type="Salesforce">
+  <AccountCorrelationConfig>
+    <Reference class="sailpoint.object.CorrelationConfig" name="COH_CorrelationConfig_SalesForce"/>
+  </AccountCorrelationConfig>
+  <Attributes>
+    <Map>
+      <entry key="acctAggregationEnd">
+        <value>
+          <Date>1528730331859</Date>
+        </value>
+      </entry>
+      <entry key="acctAggregationStart">
+        <value>
+          <Date>1528730288344</Date>
+        </value>
+      </entry>
+      <entry key="afterProvisioningRule"/>
+      <entry key="beforeProvisioningRule"/>
+      <entry key="clientId"/>
+      <entry key="clientSecret" value="1:BA7QR5zdX15IdpDAUew1Hg=="/>
+      <entry key="compositeDefinition"/>
+      <entry key="customTimeOut"/>
+      <entry key="encrypted" value="clientSecret"/>
+      <entry key="excludeFrozen">
+        <value>
+          <Boolean/>
+        </value>
+      </entry>
+      <entry key="isActive">
+        <value>
+          <Boolean/>
+        </value>
+      </entry>
+      <entry key="isOAuth2ConfigEnabled">
+        <value>
+          <Boolean/>
+        </value>
+      </entry>
+      <entry key="nativeChangeDetectionAttributeScope" value="entitlements"/>
+      <entry key="nativeChangeDetectionAttributes"/>
+      <entry key="nativeChangeDetectionEnabled">
+        <value>
+          <Boolean/>
+        </value>
+      </entry>
+      <entry key="nativeChangeDetectionOperations"/>
+      <entry key="password" value="1:TKxaR3SWzaj615uqqhOfEw=="/>
+      <entry key="sysDescriptions">
+        <value>
+          <Map>
+            <entry key="en_US" value="This application connects to the Test Instance of Saleforce for City of Hope."/>
+          </Map>
+        </value>
+      </entry>
+      <entry key="templateApplication" value="Salesforce Template"/>
+      <entry key="url" value="https://cityofhope-sailpoint.cs68.my.salesforce.com/services/Soap/u/33.0/"/>
+      <entry key="user" value="mulesoft_integration@coh.org.sailpoint"/>
+    </Map>
+  </Attributes>
+  <Dependencies>
+    <Reference class="sailpoint.object.Application" name="COH Active Directory"/>
+  </Dependencies>
+  <Owner>
+    <Reference class="sailpoint.object.Identity" name="spadmin"/>
+  </Owner>
+  <ProvisioningConfig deleteToDisable="true"/>
+  <ProvisioningForms>
+    <Form name="Account" objectType="account" type="Create">
+      <Attributes>
+        <Map>
+          <entry key="pageTitle" value="Account"/>
+        </Map>
+      </Attributes>
+      <Section>
+        <Field displayName="con_prov_policy_salesforce_direct_Alias" name="Alias" required="true" type="string">
+          <Description> Take first letter of first name and squish it together for an 8 character alias.  Otherwise use first 8 characters of the identity's name.</Description>
+          <Script>
+            <Source>
+                            
+                             String first = identity.getFirstname();
+                             String last = identity.getLastname();
+                             if ( last == null )
+                                 last = identity.getName();
+
+                             String alias = null;
+                             int max = 7;
+                             if ( last.length() &lt; max ) {
+                                 max = last.length();
+                             }else
+			    {
+				max = max -1;
+			    }
+
+                             if ( first != null ) {
+                                 alias = first.charAt(0) + last.substring(0,max);
+                             } else {
+                                 if ( last.length() &lt; 8 )
+                                     max = last.length();
+                                 alias = last.substring(0,max);
+                             }
+                             return alias;
+                            
+                          </Source>
+          </Script>
+        </Field>
+        <Field displayName="con_prov_policy_salesforce_direct_Active" name="IsActive" type="boolean" value="TRUE"/>
+        <Field displayName="con_prov_policy_salesforce_direct_Username" helpKey="help_prov_policy_salesforce_direct_Username" name="Username" required="true" type="string">
+          <Script>
+            <Source>
+return identity.getEmail();
+                          </Source>
+          </Script>
+        </Field>
+        <Field displayName="con_prov_policy_salesforce_direct_Email" helpKey="help_prov_policy_salesforce_direct_Email" name="Email" required="true" type="string">
+          <Script>
+            <Source>return identity.getStringAttribute("email");                          </Source>
+          </Script>
+        </Field>
+        <Field displayName="con_prov_policy_salesforce_direct_TimeZone" name="TimeZoneSidKey" required="true" type="string" value="America/Los_Angeles">
+          <AllowedValuesDefinition>
+            <Value>
+              <List>
+                <String>America/Chicago</String>
+                <String>America/Bogota</String>
+                <String>America/Lima</String>
+                <String>America/Los_Angeles</String>
+                <String>Atlantic/Bermuda</String>
+              </List>
+            </Value>
+          </AllowedValuesDefinition>
+        </Field>
+        <Field displayName="con_prov_policy_salesforce_direct_Locale" name="LocaleSidKey" required="true" type="string" value="en_US"/>
+        <Field displayName="con_prov_policy_salesforce_direct_LanguageLocaleKey" name="LanguageLocaleKey" required="true" type="string" value="en_US"/>
+        <Field displayName="con_prov_policy_salesforce_direct_EmailEncodingKey" name="EmailEncodingKey" required="true" type="string" value="ISO-8859-1"/>
+        <Field displayName="con_prov_policy_salesforce_direct_FederationIdentifier" name="FederationIdentifier" type="string">
+          <Script>
+            <Source>return identity.getStringAttribute("email");</Source>
+          </Script>
+        </Field>
+        <Field displayName="COH_FIRST_NAME__c" name="COH_FIRST_NAME__c" required="true" type="string">
+          <Script>
+            <Source>return identity.getStringAttribute("preferredFirstName");</Source>
+          </Script>
+        </Field>
+        <Field displayName="COH_LAST_NAME__c" name="COH_LAST_NAME__c" required="true" type="string">
+          <Script>
+            <Source>return identity.getStringAttribute("preferredLastName");</Source>
+          </Script>
+        </Field>
+        <Field displayName="Job_Title__c" name="Job_Title__c" required="true" type="string">
+          <Script>
+            <Source>return identity.getStringAttribute("jobName");</Source>
+          </Script>
+        </Field>
+        <Field displayName="FULL_PHI__c" name="FULL_PHI__c" required="true" type="string">
+          <Script>
+            <Source>return identity.getStringAttribute("accesstoPhi");</Source>
+          </Script>
+        </Field>
+        <Field displayName="Dept_Name__c" name="Dept_Name__c" required="true" type="string">
+          <Script>
+            <Source>return identity.getStringAttribute("costCenterName");</Source>
+          </Script>
+        </Field>
+        <Field displayName="BMCServiceDesk__UniqueUserIDInSource__c" name="BMCServiceDesk__UniqueUserIDInSource__c" required="true" type="string">
+          <Script>
+            <Source>return identity.getStringAttribute("employeeNumber");</Source>
+          </Script>
+        </Field>
+        <Field displayName="Location__c" name="Location__c" type="string">
+          <Script>
+            <Source>return identity.getStringAttribute("location");</Source>
+          </Script>
+        </Field>
+        <Field displayName="BMCServiceDesk__pager__c" name="BMCServiceDesk__pager__c" type="string">
+          <Script>
+            <Source>return identity.getStringAttribute("workPager");</Source>
+          </Script>
+        </Field>
+        <Field displayName="BMCServiceDesk__Account_ID__c" name="BMCServiceDesk__Account_ID__c" type="string" value="001d000000VQnm2"/>
+        <Field displayName="BMCServiceDesk__Account_Name__c" name="BMCServiceDesk__Account_Name__c" type="string" value="City of Hope National Medical Center"/>
+        <Field displayName="EMPL_STATUS__c" name="EMPL_STATUS__c" type="string">
+          <Script>
+            <Source>return identity.getStringAttribute("personStatus");</Source>
+          </Script>
+        </Field>
+        <Field displayName="Work_Phone__c" name="Work_Phone__c" type="string">
+          <Script>
+            <Source>return identity.getStringAttribute("workPhone");</Source>
+          </Script>
+        </Field>
+        <Field displayName="Work_Mobile__c" name="Work_Mobile__c" type="string">
+          <Script>
+            <Source>return identity.getStringAttribute("workMobile");</Source>
+          </Script>
+        </Field>
+        <Field displayName="Fax__c" name="Fax__c" type="string">
+          <Script>
+            <Source>return identity.getStringAttribute("workFax");</Source>
+          </Script>
+        </Field>
+        <Field displayName="Academic_Office_NO_PATIENT_CALLS__c" name="Academic_Office_NO_PATIENT_CALLS__c" type="string">
+          <Script>
+            <Source>return identity.getStringAttribute("cohPhoneAcad");</Source>
+          </Script>
+        </Field>
+        <Field displayName="COH_PREF_FIRST_NM__c" name="COH_PREF_FIRST_NM__c" type="string">
+          <Script>
+            <Source>String prefName = identity.getStringAttribute("preferredName");
+String firstName = "";
+//String lastName = "";
+if(null != prefName || !prefName.isEmpty())
+{
+  String actualLastName = identity.getStringAttribute("lastname"); 
+  //String firstName = "";
+  //String lastName = "";
+  int index = -1;
+  String[] DescrSplit = prefName.split("\\s");
+ // firstName = DescrSplit[0];
+  //lastName = DescrSplit[DescrSplit.length-1];
+  for(int i=0;i&lt;DescrSplit.length;i++)
+  {
+	if(DescrSplit[i].equalsIgnoreCase(actualLastName)) {
+        index = i;
+		}
+   }
+   if(index &gt;=0)
+	firstName = DescrSplit[index-1];
+   else
+	firstName = DescrSplit[0];	
+		firstName =	firstName.replaceAll("[()]","");
+}
+else
+ firstName = identity.getStringAttribute("firstname");
+ 
+return firstName;</Source>
+          </Script>
+        </Field>
+        <Field displayName="COH_PREF_LAST_NM__c" name="COH_PREF_LAST_NM__c" type="string">
+          <Script>
+            <Source>String prefName = identity.getStringAttribute("preferredName");
+String lastName = "";
+if(null != prefName || !prefName.isEmpty())
+{
+  int index = -1;
+  String actualLastName = identity.getStringAttribute("lastname");
+  String[] DescrSplit = prefName.split("\\s");
+  for(int i=0;i&lt;DescrSplit.length;i++)
+  {
+	if(DescrSplit[i].equalsIgnoreCase(actualLastName)) {
+        index = i;
+		}
+   }
+   if(index &gt;=0)
+	lastName = DescrSplit[index];
+   else 
+    lastName = actualLastName;
+}
+else
+ lastName = identity.getStringAttribute("lastname");
+ 
+return lastName;</Source>
+          </Script>
+        </Field>
+        <Field displayName="Supervisor_ID__c" name="Supervisor_ID__c" type="string">
+          <Script>
+            <Source>return identity.getStringAttribute("managerEmployeeNumber");</Source>
+          </Script>
+        </Field>
+        <Field displayName="LastName" name="LastName" required="true" type="string">
+          <Script>
+            <Source>return identity.getStringAttribute("lastname");</Source>
+          </Script>
+        </Field>
+        <Field displayName="Community Nickname" name="CommunityNickname" type="string">
+          <Script>
+            <Source>return identity.getStringAttribute("lanId");</Source>
+          </Script>
+        </Field>
+        <Field displayName="Company Name" name="CompanyName" type="string"/>
+        <Field name="ReceivesAdminInfoEmails" type="string" value="FALSE"/>
+        <Field displayName="UserRoleName" name="UserRoleName" type="string" value="ITS Client"/>
+        <Field name="Start_Date__c" type="string">
+          <Script>
+            <Source>import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+SimpleDateFormat sdf = new SimpleDateFormat("mm/dd/yyyy");
+SimpleDateFormat outSDF = new SimpleDateFormat("yyyy-mm-dd");
+String returnDate = "";
+Date changedDate = sdf.parse(identity.getStringAttribute("startDate"));
+returnDate = outSDF.format(changedDate);
+return returnDate;</Source>
+          </Script>
+        </Field>
+        <Field name="Call_Center_PATIENT_CALLS__c" type="string">
+          <Script>
+            <Source>return identity.getStringAttribute("cohCallCenter");</Source>
+          </Script>
+        </Field>
+        <Field name="EmployeeNumber" type="string">
+          <Script>
+            <Source>return identity.getStringAttribute("employeeNumber");</Source>
+          </Script>
+        </Field>
+        <Field name="Extension" type="string">
+          <Script>
+            <Source>return identity.getStringAttribute("workExtension");</Source>
+          </Script>
+        </Field>
+        <Field name="PermissionSet" type="string" value="TPO_Project_Portfolio_Permission_Set"/>
+      </Section>
+    </Form>
+    <Form name="disable provision policy" objectType="account" type="Disable">
+      <Attributes>
+        <Map>
+          <entry key="pageTitle" value="disable provision policy"/>
+        </Map>
+      </Attributes>
+      <Description>Attributes changed for disable account</Description>
+      <Section name="Section 1">
+        <Field name="End_Date__c" type="string">
+          <Script>
+            <Source>import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+SimpleDateFormat sdf = new SimpleDateFormat("mm/dd/yyyy"); 
+SimpleDateFormat outSDF = new SimpleDateFormat("yyyy-mm-dd");
+String outDate = "";
+Date changedDate = sdf.parse(identity.getStringAttribute("lastDate"));
+outDate = outSDF.format(changedDate);
+return outDate;</Source>
+          </Script>
+        </Field>
+        <Field name="Username" type="string">
+          <Script>
+            <Source>import sailpoint.object.Identity;
+import sailpoint.object.Link;
+import sailpoint.object.Attributes;
+import org.apache.log4j.Logger;
+import org.apache.log4j.Level;
+
+Logger  logger = Logger.getLogger("sailpoint.custom.COH.rule.CorrelationRule"); 
+Logger  logger = Logger.getLogger("sailpoint.api.Identitizer");
+logger.setLevel(Level.DEBUG);
+
+
+logger.debug("********Disable Account Provisioning Policy***********");
+String applicationName = "SalesForce";
+List links = identity.getLinks();
+
+	if(links != null) {   
+		for(Link link : links) {  
+			if(link.getApplicationName().equalsIgnoreCase(applicationName)) {
+    		    Attributes adAttribute = link.getAttributes();
+				String changeAttribute = adAttribute.getString("Username");
+				logger.debug(" Disable account for Username    " + changeAttribute);
+				if(!changeAttribute.isEmpty() &amp;&amp; changeAttribute != null ){
+				return "0"+changeAttribute;
+                }
+			}
+		}
+
+    }</Source>
+          </Script>
+        </Field>
+        <Field name="FederationIdentifier" type="string">
+          <Script>
+            <Source>import sailpoint.object.Identity;
+import sailpoint.object.Link;
+import sailpoint.object.Attributes;
+import org.apache.log4j.Logger;
+import org.apache.log4j.Level;
+
+
+Logger  logger = Logger.getLogger("sailpoint.custom.COH.rule.CorrelationRule"); 
+Logger  logger = Logger.getLogger("sailpoint.api.Identitizer");
+logger.setLevel(Level.DEBUG);
+
+
+logger.debug("********Disable Account Provisioning Policy***********");
+String applicationName = "SalesForce";
+List links = identity.getLinks();
+
+	if(links != null) {   
+		for(Link link : links) {  
+			if(link.getApplicationName().equalsIgnoreCase(applicationName)) {
+    		    Attributes adAttribute = link.getAttributes();
+				String changeAttribute = adAttribute.getString("FederationIdentifier");
+				logger.debug(" Disable account for FederationIdentifier  " + changeAttribute);
+				if(!changeAttribute.isEmpty() &amp;&amp; changeAttribute != null ){
+				return "0"+changeAttribute;
+                }
+			}
+		}
+
+    }</Source>
+          </Script>
+        </Field>
+        <Field name="Alias" type="string">
+          <Script>
+            <Source>import sailpoint.object.Identity;
+import sailpoint.object.Link;
+import sailpoint.object.Attributes;
+import org.apache.log4j.Logger;
+import org.apache.log4j.Level;
+
+
+Logger  logger = Logger.getLogger("sailpoint.custom.COH.rule.CorrelationRule"); 
+Logger  logger = Logger.getLogger("sailpoint.api.Identitizer");
+logger.setLevel(Level.DEBUG);
+
+
+logger.debug("********Disable Account Provisioning Policy***********");
+String applicationName = "COH_SalesForce_Test";
+List links = identity.getLinks();
+
+	if(links != null) {   
+		for(Link link : links) {  
+			if(link.getApplicationName().equalsIgnoreCase(applicationName)) {
+    		    Attributes adAttribute = link.getAttributes();
+				String changeAttribute = adAttribute.getString("Alias");
+				logger.debug(" Disable account for Alias    " + changeAttribute);
+				if(!changeAttribute.isEmpty() &amp;&amp; changeAttribute != null ){
+				return "0"+changeAttribute;
+                }
+			}
+		}
+
+    }</Source>
+          </Script>
+        </Field>
+        <Field name="CommunityNickname" type="string">
+          <Script>
+            <Source>import sailpoint.object.Identity;
+import sailpoint.object.Link;
+import sailpoint.object.Attributes;
+import org.apache.log4j.Logger;
+import org.apache.log4j.Level;
+
+Logger  logger = Logger.getLogger("sailpoint.custom.COH.rule.CorrelationRule"); 
+Logger  logger = Logger.getLogger("sailpoint.api.Identitizer");
+logger.setLevel(Level.DEBUG);
+
+
+logger.debug("********Disable Account Provisioning Policy***********");
+String applicationName = "SalesForce";
+List links = identity.getLinks();
+
+	if(links != null) {   
+		for(Link link : links) {  
+			if(link.getApplicationName().equalsIgnoreCase(applicationName)) {
+    		    Attributes adAttribute = link.getAttributes();
+				String changeAttribute = adAttribute.getString("CommunityNickname");
+				logger.debug(" Disable account for CommunityNickname    " + changeAttribute);
+				if(!changeAttribute.isEmpty() &amp;&amp; changeAttribute != null ){
+				return "0"+changeAttribute;
+                }
+			}
+		}
+
+    }</Source>
+          </Script>
+        </Field>
+        <Field name="Email" type="string">
+          <Script>
+            <Source>import sailpoint.object.Identity;
+import sailpoint.object.Link;
+import sailpoint.object.Attributes;
+import org.apache.log4j.Logger;
+import org.apache.log4j.Level;
+
+
+Logger  logger = Logger.getLogger("sailpoint.custom.COH.rule.CorrelationRule"); 
+Logger  logger = Logger.getLogger("sailpoint.api.Identitizer");
+logger.setLevel(Level.DEBUG);
+
+
+logger.debug("********Disable Account Provisioning Policy***********");
+String applicationName = "SalesForce";
+List links = identity.getLinks();
+
+	if(links != null) {   
+		for(Link link : links) {  
+			if(link.getApplicationName().equalsIgnoreCase(applicationName)) {
+    		    Attributes adAttribute = link.getAttributes();
+				String changeAttribute = adAttribute.getString("Email");
+				logger.debug(" Disable account for Email " + changeAttribute);
+				if(!changeAttribute.isEmpty() &amp;&amp; changeAttribute != null ){
+				return "0"+changeAttribute;
+                }
+			}
+		}
+
+    }</Source>
+          </Script>
+        </Field>
+      </Section>
+    </Form>
+  </ProvisioningForms>
+  <Schemas>
+    <Schema displayAttribute="Username" identityAttribute="Id" instanceAttribute="" nativeObjectType="User" objectType="account" permissionsRemediationModificationType="None">
+      <AttributeDefinition name="Id" type="string">
+        <Description>Internal salesforce id.</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="Alias" type="string">
+        <Description>User's assigned alias.</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="City" type="string">
+        <Description>User's city.</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="CommunityNickname" type="string">
+        <Description>DisplayNames for user's online communities.</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="CompanyName" type="string">
+        <Description>User's company name.</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="CallCenterId" type="string">
+        <Description>User's call center.</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="Country" type="string">
+        <Description>User's country.</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="Department" type="string">
+        <Description>User's department.</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="Email" type="string">
+        <Description>User's Email address.</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="Division" type="string">
+        <Description>User's division.</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="EmployeeNumber" type="string">
+        <Description>User's employee number.</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="Extension" type="string">
+        <Description>User's telephone extension.</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="Street" type="string">
+        <Description>The street address associated with the User.</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="Fax" type="string">
+        <Description>User's fax number.</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="IsActive" type="string">
+        <Description>Flag that indicates if the user is active in Salesforce.</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="IsFrozen" type="string">
+        <Description>Flag that indicates if the user is frozen in Salesforce.</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="Username" type="string">
+        <Description>Contains the name that a user enters to log into the API or the user interface.</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="FirstName" type="string">
+        <Description>User's first name.</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="LastName" type="string">
+        <Description>User's last name.</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="EmailEncodingKey" type="string">
+        <Description>Encoding that should be used during email communications.</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="Name" type="string">
+        <Description>User's fullname.</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="UserPermissionsMarketingUser" type="string">
+        <Description>Maps to the Marketing User Flag.</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="UserPermissionsMobileUser" type="string">
+        <Description>Maps to the Mobile User Flag.</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="UserPermissionsOfflineUser" type="string">
+        <Description>Maps to the Offline user Flag.</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="UserPermissionsSFContentUser" type="string">
+        <Description>Maps to Sales Anywhere User.</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="Phone" type="string">
+        <Description>User's phone number.</Description>
+      </AttributeDefinition>
+      <AttributeDefinition entitlement="true" managed="true" name="ProfileId" type="string">
+        <Description>ID of the profile assigned to a user.</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="ProfileName" type="string">
+        <Description>Name of the profile assigned to a user.</Description>
+      </AttributeDefinition>
+      <AttributeDefinition entitlement="true" managed="true" multi="true" name="PublicGroups" type="string">
+        <Description>Public groups are the entitlements for user.</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="ReceivesAdminInfoEmails" type="string">
+        <Description>Receive the salesforce.com administrator newsletter.</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="UserRoleId" type="string">
+        <Description>User Role's Id.</Description>
+      </AttributeDefinition>
+      <AttributeDefinition entitlement="true" managed="true" name="UserRoleName" type="string">
+        <Description>User Role's name.</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="UserType" type="string">
+        <Description>Type of the user.</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="State" type="string">
+        <Description>User's state.</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="Title" type="string">
+        <Description>User's title.</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="ReceivesInfoEmails" type="string">
+        <Description>Receive the salesforce.com newsletter.</Description>
+      </AttributeDefinition>
+      <AttributeDefinition entitlement="true" managed="true" multi="true" name="PermissionSet" type="string">
+        <Description>PermissionSet assigned to a user.</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="UserLicense" remediationModificationType="None" type="string">
+        <Description>User's license.</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="LanguageLocaleKey" type="string">
+        <Description>The user's language.</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="LocaleSidKey" type="string">
+        <Description>This is the user's locale.</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="TimeZoneSidKey" type="string">
+        <Description>The timezone of the user.</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="FederationIdentifier" type="string">
+        <Description>A Federation IDs is an identifier that is unique within a salesforce Organization.</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="COH_FIRST_NAME__c" type="string">
+        <Description/>
+      </AttributeDefinition>
+      <AttributeDefinition name="COH_LAST_NAME__c" type="string">
+        <Description/>
+      </AttributeDefinition>
+      <AttributeDefinition name="Job_Title__c" type="string">
+        <Description/>
+      </AttributeDefinition>
+      <AttributeDefinition name="FULL_PHI__c" type="string">
+        <Description/>
+      </AttributeDefinition>
+      <AttributeDefinition name="Dept_Name__c" type="string">
+        <Description/>
+      </AttributeDefinition>
+      <AttributeDefinition name="BMCServiceDesk__UniqueUserIDInSource__c" type="string">
+        <Description/>
+      </AttributeDefinition>
+      <AttributeDefinition name="Location__c" type="string">
+        <Description/>
+      </AttributeDefinition>
+      <AttributeDefinition name="BMCServiceDesk__pager__c" type="string">
+        <Description/>
+      </AttributeDefinition>
+      <AttributeDefinition name="BMCServiceDesk__Account_ID__c" type="string">
+        <Description/>
+      </AttributeDefinition>
+      <AttributeDefinition name="BMCServiceDesk__Account_Name__c" type="string">
+        <Description/>
+      </AttributeDefinition>
+      <AttributeDefinition name="EMPL_STATUS__c" type="string">
+        <Description/>
+      </AttributeDefinition>
+      <AttributeDefinition name="Start_Date__c" type="string">
+        <Description/>
+      </AttributeDefinition>
+      <AttributeDefinition name="Work_Phone__c" type="string">
+        <Description/>
+      </AttributeDefinition>
+      <AttributeDefinition name="Work_Mobile__c" type="string">
+        <Description/>
+      </AttributeDefinition>
+      <AttributeDefinition name="End_Date__c" type="string">
+        <Description/>
+      </AttributeDefinition>
+      <AttributeDefinition name="Supervisor__c" type="string">
+        <Description/>
+      </AttributeDefinition>
+      <AttributeDefinition name="Fax__c" type="string">
+        <Description/>
+      </AttributeDefinition>
+      <AttributeDefinition name="Academic_Office_NO_PATIENT_CALLS__c" type="string">
+        <Description/>
+      </AttributeDefinition>
+      <AttributeDefinition name="Call_Center_PATIENT_CALLS__c" type="string">
+        <Description/>
+      </AttributeDefinition>
+      <AttributeDefinition name="COH_PREF_FIRST_NM__c" type="string">
+        <Description/>
+      </AttributeDefinition>
+      <AttributeDefinition name="COH_PREF_LAST_NM__c" type="string">
+        <Description/>
+      </AttributeDefinition>
+      <AttributeDefinition name="Supervisor_ID__c" type="string">
+        <Description/>
+      </AttributeDefinition>
+      <AttributeDefinition name="secondary_supervisor__c" type="string">
+        <Description/>
+      </AttributeDefinition>
+    </Schema>
+    <Schema aggregationType="group" displayAttribute="Name" identityAttribute="Name" instanceAttribute="" nativeObjectType="PermissionSet" objectType="PermissionSet" permissionsRemediationModificationType="None">
+      <AttributeDefinition name="Name" type="string">
+        <Description>The internal id for this group.</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="Label" type="string">
+        <Description>The friendly name assigned to the profile.</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="Description" type="string">
+        <Description>Description for the profiles.</Description>
+      </AttributeDefinition>
+    </Schema>
+    <Schema displayAttribute="Name" identityAttribute="Id" instanceAttribute="" nativeObjectType="Profile" objectType="group" permissionsRemediationModificationType="None">
+      <AttributeDefinition name="Id" type="string">
+        <Description>The internal id for this group.</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="Name" type="string">
+        <Description>The friendly name assigned to the profile.</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="Description" type="string">
+        <Description>Description for the profiles.</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="UserType" type="string">
+        <Description>This is the type of profile even though the attribute name would indicate a user.</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="UserLicense" remediationModificationType="None" type="string">
+        <Description>User's license.</Description>
+      </AttributeDefinition>
+    </Schema>
+  </Schemas>
+  <ApplicationScorecard/>
+</Application>

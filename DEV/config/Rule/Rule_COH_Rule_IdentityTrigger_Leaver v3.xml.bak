@@ -1,0 +1,130 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="COH_Rule_IdentityTrigger_Leaver v3" type="IdentityTrigger">
+  <Description>This rule can be used for Certification Events that use rule triggers. The previousIdentity and newIdentity hold snapshots of the identity before the update has occurred and the state of the identity after the update, respectively.</Description>
+  <Signature returnType="boolean">
+    <Inputs>
+      <Argument name="log">
+        <Description>
+          The log object associated with the SailPointContext.
+        </Description>
+      </Argument>
+      <Argument name="context">
+        <Description>
+          A sailpoint.api.SailPointContext object that can be used to query the database if necessary.
+        </Description>
+      </Argument>
+      <Argument name="previousIdentity">
+        <Description>
+          The identity before the refresh/aggregation (this will be null when an
+          identity is created).
+        </Description>
+      </Argument>
+      <Argument name="newIdentity">
+        <Description>
+          The identity after the refresh/aggregation (this will be null when an
+          identity is deleted).
+        </Description>
+      </Argument>
+    </Inputs>
+    <Returns>
+      <Argument name="result">
+        <Description>
+          A boolean describing the result of the rule.
+        </Description>
+      </Argument>
+    </Returns>
+  </Signature>
+  <Source>import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+
+import sailpoint.api.IdentityService;
+import sailpoint.api.SailPointContext;
+import sailpoint.object.AbstractCertifiableEntity;
+import sailpoint.object.Application;
+import sailpoint.object.Certifiable;
+import sailpoint.object.EntitlementSnapshot;
+import sailpoint.object.Filter;
+import sailpoint.object.Identity;
+import sailpoint.object.Link;
+import sailpoint.object.ManagedAttribute;
+import sailpoint.object.ProvisioningPlan.AccountRequest;
+import sailpoint.object.ProvisioningPlan.AttributeRequest;
+import sailpoint.object.QueryOptions;
+import sailpoint.tools.GeneralException;
+import org.apache.log4j.Logger;
+import org.apache.log4j.Level;
+
+Logger  logger = Logger.getLogger("sailpoint.custom.COH.provisioning.rule.triggerTest"); 
+ Logger  logger = Logger.getLogger("sailpoint.api.Identitizer 1.0");
+ logger.setLevel(Level.DEBUG); 
+		boolean isLeaver = false;
+		if (newIdentity != null) {
+			log.debug("Starting leaver identitytrigger for " + newIdentity.getName());
+			String status = newIdentity.getStringAttribute("personStatus");
+			String lastTransactionType = newIdentity.getStringAttribute("lastTransactionType");
+			String disableDate = newIdentity.getStringAttribute("lastDate");
+			String employeeNumber = newIdentity.getStringAttribute("employeeNumber");
+		//	String lanID = newIdentity.getStringAttribute("lanID");
+			String workflowProcess = newIdentity.getStringAttribute("workflowProcess");
+			boolean checkDate = false;
+			if (disableDate != null) {
+				SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+				try {
+					Date disabledDate = sdf.parse(disableDate);
+					Date todayDate = new Date();
+					disabledDate = sailpoint.tools.Util.getBeginningOfDay(disabledDate);
+					todayDate = sailpoint.tools.Util.getBeginningOfDay(todayDate);
+					if (todayDate.equals(disabledDate)) {
+						checkDate = true;
+					} else if (todayDate.after(disabledDate)) {
+						int diff = sailpoint.tools.Util.getDaysDifference(todayDate, disabledDate);
+						log.debug("diff " + diff);
+						if (diff &gt;= 0 &amp;&amp; diff &lt; 45) {
+							checkDate = true;
+						}
+					}
+				} catch (ParseException e) {
+					throw new GeneralException("Date can't be parsed");
+				}
+			}
+logger.debug("Trigger Value: "+lastTransactionType +"****** " + employeeNumber+ "********** ");
+			log.debug("checkDate " + checkDate);
+			if (checkDate) {
+				log.debug(lastTransactionType +" " + employeeNumber+ " ");
+				if (lastTransactionType != null &amp;&amp; employeeNumber != null) {
+					log.debug("pass1 " );
+					if (workflowProcess != null) {
+						log.debug("pass2 " );
+						if (workflowProcess.startsWith("FAIL") || workflowProcess.startsWith("JOINER")) {
+							log.debug("pass3 " );
+							if (status != null) {
+								if (status.equalsIgnoreCase("T") || status.equalsIgnoreCase("U") || status.equalsIgnoreCase("D")) {
+									isLeaver = true;
+								}
+							} else {
+								isLeaver = true;
+							}
+						}
+					} else {
+						log.debug("pass2 else " );
+						if (status != null) {
+							if (status.equalsIgnoreCase("T") || status.equalsIgnoreCase("U") || status.equalsIgnoreCase("D")) {
+								isLeaver = true;
+							}
+						} else {
+							isLeaver = true;
+						}
+					}
+				}
+			}
+		}
+		log.debug("Starting leaver identitytrigger for " + isLeaver);
+		return isLeaver;</Source>
+</Rule>

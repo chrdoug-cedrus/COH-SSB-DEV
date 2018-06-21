@@ -1,0 +1,894 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE Application PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Application connector="sailpoint.connector.ADLDAPConnector" featuresString="PROVISIONING, SYNC_PROVISIONING, AUTHENTICATE, MANAGER_LOOKUP, SEARCH, UNSTRUCTURED_TARGETS, UNLOCK, ENABLE, PASSWORD, CURRENT_PASSWORD" icon="directory1Icon" name="COH Active Directory" profileClass="" type="Active Directory - Direct">
+  <Attributes>
+    <Map>
+      <entry key="IQServiceHost" value="10.30.142.84"/>
+      <entry key="IQServicePort" value="5050"/>
+      <entry key="acctAggregationEnd">
+        <value>
+          <Date>1528915126631</Date>
+        </value>
+      </entry>
+      <entry key="acctAggregationStart">
+        <value>
+          <Date>1528915093553</Date>
+        </value>
+      </entry>
+      <entry key="afterProvisioningRule"/>
+      <entry key="allowAutoPartitioning">
+        <value>
+          <Boolean/>
+        </value>
+      </entry>
+      <entry key="authSearchAttributes">
+        <value>
+          <List>
+            <String>sAMAccountName</String>
+            <String>msDS-PrincipalName</String>
+            <String>mail</String>
+          </List>
+        </value>
+      </entry>
+      <entry key="beforeProvisioningRule"/>
+      <entry key="cacheRemoteObjectPort" value="40002"/>
+      <entry key="cacheRmiPort" value="40001"/>
+      <entry key="compositeDefinition"/>
+      <entry key="deletedObjectsContainer" value="CN=Deleted Objects,DOMAIN"/>
+      <entry key="deltaAggregation">
+        <value>
+          <Map>
+            <entry key="dc=coh,dc=org">
+              <value>
+                <Map>
+                  <entry key="groups_cookie" value="TVNEUwMAAABoUj+GIe7TAQAAAAAAAAAAuAYAAD1lDgQAAAAAAAAAAAAAAAA9ZQ4EAAAAAPCeX+FX&#xa;GtJImW4MuuwFlB4BAAAAAAAAAEcAAAAAAAAAQI+EAaIi/Eydfw+qHS6BekYonwEAAAAAprLQAV6C&#xa;8EuDj11hrd5jZ5XQtAAAAAAA6zArBHQOkEC0oIlf88GlE+bxFRkAAAAA93MIBQN3PUm7KfZVqxhz&#xa;6oR3BgAAAAAAetFSDuebMEm7//InOqRNVE0RBwAAAAAA4TUuFW4jgkaQ/JyjCxzyFPsimgAAAAAA&#xa;oeh5FvrtNEaR7vkQWKcTi9y6shgAAAAANpCyHBRtdEGpdb57luf2eCfn0gAAAAAAg6IbH1DcVUGr&#xa;PK9yOHk8e2r2agAAAAAATo56IRvqm02LSjb30AOsSyuwEQAAAAAAAhz+I4RfZkG11fx75Gy1lOzC&#xa;MgQAAAAALWjkJJ8/Mkm5ezuDPZecXEB6AQAAAAAA0GXYJ30tNUCKzmt4NhRDT7M1gwsAAAAAEbY+&#xa;Ku0Ad0GyV7/cefhu9ZO9+QAAAAAAUDxdKoQL106dmGKcYnEPE0XWfwEAAAAAkVqOL8mNek6TStKL&#xa;z7CSIACSygAAAAAAUJZ+Mi/L4UKSvsFx9xVBqSYlBAAAAAAAZgX3MqqyBUSPojiOf+ktvyAG4AwA&#xa;AAAAc9tPNVRhU0m6Sc+mJpUZJ8bMrgEAAAAAP6LzObEsQUu4n5/sxuM699igdAEAAAAAQ67KOvoS&#xa;UUabW7lYCQEgZ4kjeAEAAAAArP/vO9YxFUu5MmkXJBQSOjsABwAAAAAAnUAAQlBWLkWQLFEVQgFt&#xa;zQwFUAUAAAAAN+IbQ8ssZUCZ8KpmfrQiJG13qhsAAAAA0aecRwb9QkOCOhHtMPiibWYVyhEAAAAA&#xa;mfpdU7EbRkukqiO/aW/4BLXZuAIAAAAAzFh4VpLgI0+HKFyIFt/Gm/Tf0gAAAAAA/P6oVkRaWkqP&#xa;xr38XTk9oun8GgAAAAAAZ/LaWF5jmkeHK9EJBUzw6vNpoAEAAAAAHHPbY4Ne4kO7io2PMZ5hcKci&#xa;sAIAAAAAPELTZBSN0UaI9wNXj48CNhmwqwAAAAAAL7YObDWSmUiKG8TVeLV1tLn0jAIAAAAAZ4Q7&#xa;b3V3A0aWrYdFheBinIK9bxoAAAAAaF4kdOMxREmrtz3x9lJXnQYUWAEAAAAATdeSe+sHrEezq8GS&#xa;npvLv1rzrwEAAAAAUcK1f9ZsUkWDQETx6C//ImrimQAAAAAAl8ajgo+Qa0qYPDe/+m1PS3DwsQAA&#xa;AAAAKbMphKBEMUWgf8ZAPgBuZDVh6xoAAAAAA50zh8nt806XkZ9v02I2HjJB3Q0AAAAARj3fh5Fh&#xa;AEi47kpFp0y3l45gERcAAAAAQ9ItjhIAN0e6SEpnZM69s35GAgAAAAAAQkyVmQDnv0KC1PNe2JFe&#xa;Cn23EgEAAAAAy+BwpFukNEasL4filoMrkFaqfwIAAAAAkCgQqi9MFUOKXlo8gSrdE5znMgQAAAAA&#xa;Uh4FtKSZIUKYLnDe6ZcDEMm+rB0AAAAAEURetXiHdk2WQ4GEsff9BqE78wUAAAAA7p0Pt0kKU02y&#xa;m1unN/xbCAIABgAAAAAAXpequc8USkyi2OKXL1B44qXtnAEAAAAAz3y8w/dlI0iB+VdbtniqGNBA&#xa;jQQAAAAAA85ZxWNGn0GkVWcA359M0us7kgAAAAAACTO1yeH6aUWYpgT+uga3h4IAAgAAAAAAP0DO&#xa;yaAmfU+c3d7pZnXdYy5lCxAAAAAAJjjWyvR00UGGVWqHB7XNP+m0lA4AAAAAPa0/y+uiIkOIRgeP&#xa;blLQsFM8pwEAAAAALSz/02/aV0KRYvr5dZIrq+uj3iAAAAAAgwaL1vk+Z0+TPLdV9cVoi7AQKwAA&#xa;AAAAVItZ2QUW60K/1junHvoRv/ZMCAQAAAAAHcXo2+HpDUWt6qpnfi4ZUKFxCwAAAAAAqpnA3xvS&#xa;UUeZdhC/7XW66B6wEQAAAAAA211Q4OIAlUmfsNCNd4JybFkvUBUAAAAAKj4b4fUd/EKVGLkwDnCn&#xa;ddb7GwAAAAAA8J5f4Vca0kiZbgy67AWUHkFlDgQAAAAAZBVm4gatpUKMq4Cza3lrJwwNKhAAAAAA&#xa;gDZn4t3zOEeTIHQeGJLAsBSWHQgAAAAAmtVE5XTXgk2Vm+HYeA/s8tSbrQEAAAAAho2L5VV5v0ef&#xa;/kuxng0hpHngsQAAAAAAg7HU87QMGUWKSbNF8P9Qs7e0igkAAAAAPUGk9y2VfkioNtbgwHszyVSr&#xa;bAAAAAAAyf2u+MrkN0680JULq08eeDethFMAAAAAJPPf+wb0hU2BIpfW0VKxlipJowEAAAAAHZv/&#xa;/0AMHE+twZw4shL9U48wrgAAAAAA"/>
+                  <entry key="lastDirsyncServer" value="coh.org"/>
+                  <entry key="users_cookie" value="TVNEUwMAAADZx6mvRQPUAQAAAAAAAAAAuAYAABC3cgYAAAAAAAAAAAAAAAAQt3IGAAAAABFEXrV4&#xa;h3ZNlkOBhLH3/QYBAAAAAAAAAEcAAAAAAAAAQI+EAaIi/Eydfw+qHS6BekYonwEAAAAAprLQAV6C&#xa;8EuDj11hrd5jZ5XQtAAAAAAA6zArBHQOkEC0oIlf88GlE+bxFRkAAAAA93MIBQN3PUm7KfZVqxhz&#xa;6oR3BgAAAAAAetFSDuebMEm7//InOqRNVE0RBwAAAAAA4TUuFW4jgkaQ/JyjCxzyFPsimgAAAAAA&#xa;oeh5FvrtNEaR7vkQWKcTi9y6shgAAAAANpCyHBRtdEGpdb57luf2eCfn0gAAAAAAg6IbH1DcVUGr&#xa;PK9yOHk8e2r2agAAAAAATo56IRvqm02LSjb30AOsSyuwEQAAAAAAAhz+I4RfZkG11fx75Gy1lOzC&#xa;MgQAAAAALWjkJJ8/Mkm5ezuDPZecXEB6AQAAAAAA0GXYJ30tNUCKzmt4NhRDT7M1gwsAAAAAEbY+&#xa;Ku0Ad0GyV7/cefhu9ZO9+QAAAAAAUDxdKoQL106dmGKcYnEPE0XWfwEAAAAAkVqOL8mNek6TStKL&#xa;z7CSIACSygAAAAAAUJZ+Mi/L4UKSvsFx9xVBqSYlBAAAAAAAZgX3MqqyBUSPojiOf+ktv/HktQ0A&#xa;AAAAc9tPNVRhU0m6Sc+mJpUZJ8bMrgEAAAAAP6LzObEsQUu4n5/sxuM699igdAEAAAAAQ67KOvoS&#xa;UUabW7lYCQEgZ4kjeAEAAAAArP/vO9YxFUu5MmkXJBQSOjsABwAAAAAAnUAAQlBWLkWQLFEVQgFt&#xa;zQwFUAUAAAAAN+IbQ8ssZUCZ8KpmfrQiJG13qhsAAAAA0aecRwb9QkOCOhHtMPiibWYVyhEAAAAA&#xa;mfpdU7EbRkukqiO/aW/4BGatwAIAAAAAzFh4VpLgI0+HKFyIFt/Gm/Tf0gAAAAAA/P6oVkRaWkqP&#xa;xr38XTk9oun8GgAAAAAAZ/LaWF5jmkeHK9EJBUzw6gpXwAEAAAAAHHPbY4Ne4kO7io2PMZ5hcMWL&#xa;vQIAAAAAPELTZBSN0UaI9wNXj48CNhmwqwAAAAAAL7YObDWSmUiKG8TVeLV1tAIokwIAAAAAZ4Q7&#xa;b3V3A0aWrYdFheBinHsYXRsAAAAAaF4kdOMxREmrtz3x9lJXnUPaDAIAAAAATdeSe+sHrEezq8GS&#xa;npvLv1RM1AEAAAAAUcK1f9ZsUkWDQETx6C//ImrimQAAAAAAl8ajgo+Qa0qYPDe/+m1PS3DwsQAA&#xa;AAAAKbMphKBEMUWgf8ZAPgBuZI9IyRsAAAAAA50zh8nt806XkZ9v02I2HjJB3Q0AAAAARj3fh5Fh&#xa;AEi47kpFp0y3l45gERcAAAAAQ9ItjhIAN0e6SEpnZM69s35GAgAAAAAAQkyVmQDnv0KC1PNe2JFe&#xa;Cn23EgEAAAAAy+BwpFukNEasL4filoMrkPyHjQIAAAAAkCgQqi9MFUOKXlo8gSrdE5znMgQAAAAA&#xa;Uh4FtKSZIUKYLnDe6ZcDEMm+rB0AAAAAEURetXiHdk2WQ4GEsff9Bhq3cgYAAAAA7p0Pt0kKU02y&#xa;m1unN/xbCAIABgAAAAAAXpequc8USkyi2OKXL1B44qXtnAEAAAAAz3y8w/dlI0iB+VdbtniqGNBA&#xa;jQQAAAAAA85ZxWNGn0GkVWcA359M0us7kgAAAAAACTO1yeH6aUWYpgT+uga3h4IAAgAAAAAAP0DO&#xa;yaAmfU+c3d7pZnXdYy5lCxAAAAAAJjjWyvR00UGGVWqHB7XNP+m0lA4AAAAAPa0/y+uiIkOIRgeP&#xa;blLQsFM8pwEAAAAALSz/02/aV0KRYvr5dZIrq2z2niMAAAAAgwaL1vk+Z0+TPLdV9cVoi7AQKwAA&#xa;AAAAVItZ2QUW60K/1junHvoRv/ZMCAQAAAAAHcXo2+HpDUWt6qpnfi4ZUKFxCwAAAAAAqpnA3xvS&#xa;UUeZdhC/7XW66B6wEQAAAAAA211Q4OIAlUmfsNCNd4JybFkvUBUAAAAAKj4b4fUd/EKVGLkwDnCn&#xa;ddb7GwAAAAAA8J5f4Vca0kiZbgy67AWUHrsZLwcAAAAAZBVm4gatpUKMq4Cza3lrJz9LphAAAAAA&#xa;gDZn4t3zOEeTIHQeGJLAsN7ngAgAAAAAmtVE5XTXgk2Vm+HYeA/s8tSbrQEAAAAAho2L5VV5v0ef&#xa;/kuxng0hpHngsQAAAAAAg7HU87QMGUWKSbNF8P9Qs7e0igkAAAAAPUGk9y2VfkioNtbgwHszyVSr&#xa;bAAAAAAAyf2u+MrkN0680JULq08eeMGMH1cAAAAAJPPf+wb0hU2BIpfW0VKxlipJowEAAAAAHZv/&#xa;/0AMHE+twZw4shL9U48wrgAAAAAA"/>
+                </Map>
+              </value>
+            </entry>
+          </Map>
+        </value>
+      </entry>
+      <entry key="deltaIterationMode" value="dirSync"/>
+      <entry key="disableComputePreloading">
+        <value>
+          <Boolean/>
+        </value>
+      </entry>
+      <entry key="disableFspAggregation">
+        <value>
+          <Boolean/>
+        </value>
+      </entry>
+      <entry key="domainSettings">
+        <value>
+          <List>
+            <Map>
+              <entry key="authorizationType" value="simple"/>
+              <entry key="domainDN" value="DC=coh,DC=org"/>
+              <entry key="domainIterateSearchFilter"/>
+              <entry key="domainNetBiosName"/>
+              <entry key="forestName" value="COH"/>
+              <entry key="password" value="1:Vy07cbv+/eSbVZAzvLJ1xw=="/>
+              <entry key="port" value="389"/>
+              <entry key="servers"/>
+              <entry key="useSSL">
+                <value>
+                  <Boolean/>
+                </value>
+              </entry>
+              <entry key="user" value="CN=svc_EDIMAD,OU=Service Accounts,DC=coh,DC=org"/>
+            </Map>
+          </List>
+        </value>
+      </entry>
+      <entry key="enableCache">
+        <value>
+          <Boolean>true</Boolean>
+        </value>
+      </entry>
+      <entry key="forestSettings">
+        <value>
+          <List>
+            <Map>
+              <entry key="authorizationType" value="simple"/>
+              <entry key="forestName" value="COH"/>
+              <entry key="gcServer" value="ad-dc8.coh.org:3268"/>
+              <entry key="manageAllDomains">
+                <value>
+                  <Boolean/>
+                </value>
+              </entry>
+              <entry key="password" value="1:Vy07cbv+/eSbVZAzvLJ1xw=="/>
+              <entry key="useGroupMembershipPreloading"/>
+              <entry key="useSSL">
+                <value>
+                  <Boolean/>
+                </value>
+              </entry>
+              <entry key="user" value="CN=svc_EDIMAD,OU=Service Accounts,DC=coh,DC=org"/>
+            </Map>
+          </List>
+        </value>
+      </entry>
+      <entry key="group.searchDNs">
+        <value>
+          <List>
+            <Map>
+              <entry key="iterateSearchFilter"/>
+              <entry key="searchDN" value="OU=EDIM Groups,OU=EDIM Test,OU=TEST OU,DC=coh,DC=org"/>
+              <entry key="searchScope" value="SUBTREE"/>
+            </Map>
+          </List>
+        </value>
+      </entry>
+      <entry key="lyncAttributes" value="RegistrarPool,SipAddressType,SipAddress,SipDomain,msRTCSIP-UserEnabled"/>
+      <entry key="manageRecycleBin">
+        <value>
+          <Boolean/>
+        </value>
+      </entry>
+      <entry key="nativeChangeDetectionAttributeScope" value="entitlements"/>
+      <entry key="nativeChangeDetectionAttributes"/>
+      <entry key="nativeChangeDetectionEnabled">
+        <value>
+          <Boolean/>
+        </value>
+      </entry>
+      <entry key="nativeChangeDetectionOperations"/>
+      <entry key="pageSize" value="100"/>
+      <entry key="searchDNs">
+        <value>
+          <List>
+            <Map>
+              <entry key="groupMemberFilterString"/>
+              <entry key="groupMembershipSearchDN" value="OU=EDIM Groups,OU=EDIM Test,OU=TEST OU,DC=coh,DC=org"/>
+              <entry key="iterateSearchFilter"/>
+              <entry key="primaryGroupSearchDN"/>
+              <entry key="searchDN" value="OU=EDIM Test,OU=TEST OU,DC=coh,DC=org"/>
+              <entry key="searchScope" value="SUBTREE"/>
+            </Map>
+          </List>
+        </value>
+      </entry>
+      <entry key="sysDescriptions">
+        <value>
+          <Map>
+            <entry key="en_US" value="Active Directory for City Of Hope.&lt;br>&#xd;&#xa;&#xd;&#xa; Connects and Aggregates Account and Group information from the COHBRI Domain."/>
+          </Map>
+        </value>
+      </entry>
+      <entry key="templateApplication" value="Active Directory Template"/>
+      <entry key="useSSL" value="false"/>
+    </Map>
+  </Attributes>
+  <CorrelationRule>
+    <Reference class="sailpoint.object.Rule" name="COH_Rule - Correlation Rule"/>
+  </CorrelationRule>
+  <Owner>
+    <Reference class="sailpoint.object.Identity" name="spadmin"/>
+  </Owner>
+  <ProvisioningForms>
+    <Form name="Account" objectType="account" type="Create">
+      <Attributes>
+        <Map>
+          <entry key="pageTitle" value="Account"/>
+        </Map>
+      </Attributes>
+      <Section label="Account" name="Account">
+        <Field dependencies="sAMAccountName" displayName="userPrincipalName" helpKey="userPrincipalName" name="userPrincipalName" required="true" section="Account" type="string">
+          <Script>
+            <Source> 
+			return sAMAccountName+"@coh.org";
+			</Source>
+          </Script>
+        </Field>
+        <Field displayName="con_prov_policy_ad_objecttype" name="ObjectType" required="true" section="Account" type="string" value="User"/>
+        <Field displayName="Distinguished name" dynamic="true" name="distinguishedName" type="string">
+          <Script>
+            <Source> 
+
+import sailpoint.api.SailPointContext;
+import sailpoint.object.Custom;
+import sailpoint.object.Filter;
+import sailpoint.object.Identity;
+import sailpoint.object.QueryOptions;
+import sailpoint.tools.GeneralException;
+			
+					public String createDN(Identity identity) throws GeneralException {
+						String dn = null;
+						if (identity != null) {
+							if (identity.getFirstname() != null &amp;&amp; identity.getLastname() != null) {
+								// change format if required
+								String dnPrefix = "CN=" + identity.getLastname() + "\\, "+ identity.getFirstname();
+								// TO DO: Change Custom Object name
+								
+								String company = identity.getAttribute("companyCode");
+								String companyName = identity.getAttribute("companyName");
+								Custom custom = context.getObjectByName(Custom.class, "Custom");
+								if(custom != null){
+								String ouName = custom.getString("ouDefault");
+								
+								if("30".equalsIgnoreCase(company) &amp;&amp; companyName != null &amp;&amp; companyName.contains("Beckman Research Institute")){
+									ouName = custom.getString("OU30");
+								}
+								
+								if("80".equalsIgnoreCase(company) &amp;&amp; companyName != null &amp;&amp; companyName.contains("City of Hope Med Foundation")){
+									ouName = custom.getString("OU80");
+								}
+								
+								dn = createUniqueDN(dnPrefix, ouName);
+								}
+								
+							}
+						}
+						return dn;
+					}
+
+					public String createUniqueDN(String dnPrefix, String ouName) {
+						String dn = null;
+						if (dnPrefix != null &amp;&amp; ouName != null) {
+							dn = dnPrefix + ouName;
+							Map mapResult = checkDuplicatesExists(dn);
+							boolean requiresIncrement = (Boolean) mapResult.get("requiresIncrement");
+							if (requiresIncrement) {
+								int increment = (Integer) mapResult.get("increment");
+								String number = "";
+								int toTrim = 0;
+								for (int i = dnPrefix.length() - 1; i &gt;= 0; i--) {
+									if (Character.isDigit(dnPrefix.charAt(i))) {
+										System.out.println(dnPrefix.charAt(i));
+										number = dnPrefix.charAt(i) + number;
+									} else {
+										System.out.println(dnPrefix.charAt(i));
+										toTrim = i;
+										break;
+									}
+								}
+								int incrementPresentInDn = 0;
+								try {
+									incrementPresentInDn = Integer.parseInt(number);
+								} catch (NumberFormatException e) {
+									System.out.println(e);
+								}
+								dnPrefix = dnPrefix.substring(0, toTrim + 1);
+								increment = increment + incrementPresentInDn;
+								dnPrefix = dnPrefix + increment;
+								String newNativeID = null;
+								newNativeID = createUniqueDN(dnPrefix, ouName);
+								dn = newNativeID;
+							}
+						}
+						return dn;
+					}
+
+					public Map checkDuplicatesExists(String nativeId) {
+						Map map = new HashMap();
+						QueryOptions qo = new QueryOptions();
+						Filter filter = Filter.like("links.nativeIdentity", nativeId);
+						qo.addFilter(filter);
+						Iterator allIdentities = null;
+						try {
+							allIdentities = context.search(Identity.class, qo);
+						} catch (GeneralException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						boolean requiresIncrement = false;
+						int increment = 0;
+						if (allIdentities != null) {
+							while (allIdentities.hasNext()) {
+								Identity id = (Identity) allIdentities.next();
+								requiresIncrement = true;
+								increment++;
+								// break;
+							}
+							// increment =increment+1;
+						}
+						map.put("increment", increment);
+						map.put("requiresIncrement", requiresIncrement);
+						return map;
+					}
+					
+					return createDN(identity);
+			</Source>
+          </Script>
+        </Field>
+        <Field displayName="Manager" helpKey="Manager" name="manager" section="Account" type="string">
+          <Script>
+            <Source> 	
+			
+import sailpoint.api.IdentityService;
+import sailpoint.api.SailPointContext;
+import sailpoint.object.Application;
+import sailpoint.object.Identity;
+import sailpoint.object.Link;
+import sailpoint.object.ProvisioningProject;
+import sailpoint.tools.GeneralException;			
+
+		String manager = null;
+		Application app = context.getObjectByName(Application.class, "COH Active Directory");
+		if (identity != null &amp;&amp; identity.getManager() != null &amp;&amp; app != null) {
+			Identity managerIdentity = identity.getManager();
+			IdentityService service = new IdentityService(context);
+			List listOfLinks = service.getLinks(managerIdentity, app);
+			if (listOfLinks != null &amp;&amp; listOfLinks.size() &gt; 0) {
+				for (Link link : listOfLinks) {
+					manager = link.getNativeIdentity();
+					break;
+				}
+			}
+		}
+		return manager;
+			</Source>
+          </Script>
+        </Field>
+        <Field displayName="con_prov_policy_ad_sAMAccountName" helpKey="help_con_prov_policy_ad_sAMAccountName" name="sAMAccountName" required="true" section="Account" type="string">
+          <Script>
+            <Source> 	
+
+import sailpoint.api.SailPointContext;
+import sailpoint.object.Application;
+import sailpoint.object.Attributes;
+import sailpoint.object.Filter;
+import sailpoint.object.Identity;
+import sailpoint.object.ManagedAttribute;
+import sailpoint.object.ProvisioningPlan.AccountRequest;
+import sailpoint.object.ProvisioningPlan.AttributeRequest;
+import sailpoint.object.ProvisioningPlan.ObjectOperation;
+import sailpoint.object.ProvisioningPlan.Operation;
+import sailpoint.object.ProvisioningProject;
+import sailpoint.object.QueryOptions;
+import sailpoint.tools.GeneralException;
+			
+	public String createSamAccountName(Identity identity) throws GeneralException {
+		String samAccountName = null;
+		if (identity != null) {
+			String firstName = identity.getFirstname();
+			String lastName = identity.getLastname();
+			
+			
+			if (lastName != null) {
+           lastName = lastName.replaceAll(" ", "");
+				if (lastName.length() &gt; 2) {
+					if (lastName.length() &gt;= 15) {
+						lastName = lastName.substring(0, 14);
+					}
+				}
+				lastName = lastName.toLowerCase();
+			}
+			if (firstName != null) {
+           firstName = firstName.replaceAll(" ", "");
+				if (firstName.length() &gt; 2) {
+					firstName = firstName.charAt(0) + "";
+				} else if (2 &gt; firstName.length()) {
+					firstName = "X";
+				}
+				firstName = firstName.toLowerCase();
+			}
+              if(firstName!=null &amp;&amp; lastName!=null){
+			samAccountName = firstName + lastName;
+			samAccountName = checkForDuplicates(samAccountName, 0, identity);
+              }
+		}
+		return samAccountName;
+	}
+
+	public String checkForDuplicates(String samAccountName, int numberOfTry, Identity identity) throws GeneralException {
+		if (samAccountName != null) {
+			Map map = new HashMap();
+			QueryOptions qo = new QueryOptions();
+			Filter filter1 = Filter.eq("links.displayName", samAccountName);
+			Filter filter2 = Filter.eq("links.application.name", "COH Active Directory");
+			qo.addFilter(Filter.and(filter1, filter2));
+			int count = context.countObjects(Identity.class, qo);
+			if (count &gt; 0) {
+				numberOfTry++;
+				samAccountName = generateUniqueSam(numberOfTry, identity);
+				samAccountName = checkForDuplicates(samAccountName, numberOfTry, identity);
+			}
+		}
+		return samAccountName;
+	}
+
+	public String generateUniqueSam(int numberOfTry, Identity identity) throws GeneralException {
+		String samAccountName = null;
+		if (identity != null) {
+			String firstName = identity.getFirstname();
+			String lastName = identity.getLastname();
+			
+						
+			if (lastName != null) {
+              lastName = lastName.replaceAll(" ", "");
+				if (lastName.length() &gt;= 15) {
+					lastName = lastName.substring(0, 14 - numberOfTry);
+				}
+				lastName = lastName.toLowerCase();
+			}
+			if (firstName != null) {
+              firstName = firstName.replaceAll(" ", "");
+				if (firstName.length() &gt;= 1 + numberOfTry) {
+					firstName = firstName.substring(0, 0 + numberOfTry);
+				} else {
+					firstName = "X";
+				}
+				firstName = firstName.toLowerCase();
+			}
+			samAccountName = firstName + lastName;
+		}
+		return samAccountName;
+	}
+	return createSamAccountName(identity);
+			</Source>
+          </Script>
+        </Field>
+        <Field displayName="con_prov_policy_ad_password" helpKey="help_con_prov_policy_ad_password" name="password" required="true" section="Account" type="secret">
+          <Script>
+            <Source>
+             import sailpoint.object.Identity;
+             import java.util.Random;
+             import java.lang.String;
+					   Random random = new Random();
+             int  n = random.nextInt(100) + 1;
+             String number = String.format("%02d", n );
+            	log.debug("Random Number is :::: "+n);
+            //100 is the maximum and the 1 is our minimum 
+              String firstName = identity.getStringAttribute("firstname");
+              String lastName = identity.getStringAttribute("lastname");
+              String fn,ln;
+            	String pwd;
+              if(firstName != null &amp;&amp; lastName != null){
+            	 fn=""+firstName.charAt(0);
+            	 ln=""+lastName.charAt(0);
+            	 pwd=fn+ln+"Ex@m"+number;
+            }
+            log.debug("**pwd :: "+pwd);
+            return pwd;
+			</Source>
+          </Script>
+        </Field>
+        <Field displayName="con_prov_policy_ad_pwdLastSet" helpKey="help_con_prov_policy_ad_pwdLastSet" name="pwdLastSet" section="Account" type="boolean"/>
+        <Field displayName="con_prov_policy_ad_IIQDisabled" helpKey="help_con_prov_policy_ad_IIQDisabled" name="IIQDisabled" section="Account" type="boolean" value="false"/>
+        <Field displayName="con_prov_policy_ad_primaryGroupDN" helpKey="help_con_prov_policy_ad_primaryGroupDN" name="primaryGroupDN" section="Account" type="string" value="CN=EDIM test 2,OU=EDIM Groups,OU=EDIM Test,OU=TEST OU,DC=coh,DC=org"/>
+        <Field name="cn" type="string"/>
+        <Field name="mail" required="true" type="string">
+          <Script>
+            <Source>return sAMAccountName+"@coh.org";</Source>
+          </Script>
+        </Field>
+        <Field displayName="departmentNumber" helpKey="departmentNumber" name="departmentNumber" required="true" section="Account" type="string">
+          <Script>
+            <Source> 			
+		return identity.getStringAttribute("costCenterID");
+			</Source>
+          </Script>
+        </Field>
+        <Field name="telephoneNumber" type="string">
+          <AllowedValuesDefinition>
+            <Script>
+              <Source>              import sailpoint.object.Identity;
+              return identity.getStringAttribute("workExtension");</Source>
+            </Script>
+          </AllowedValuesDefinition>
+        </Field>
+        <Field name="employeeID" type="string">
+          <Script>
+            <Source>import sailpoint.object.Identity;
+identity.getStringAttribute("employeeNumber");</Source>
+          </Script>
+        </Field>
+        <Field displayName="Employee Type" name="employeeType" type="string">
+          <Script>
+            <Source>import sailpoint.object.Identity;
+
+return identity.getStringAttribute("employmentType");</Source>
+          </Script>
+        </Field>
+        <Field displayName="Employee Number" name="employeeNumber" type="string">
+          <Script>
+            <Source>import sailpoint.object.Identity;
+return identity.getStringAttribute("employeeType");</Source>
+          </Script>
+        </Field>
+        <Field displayName="Office" name="physicalDeliveryOfficeName" type="string">
+          <Script>
+            <Source>import sailpoint.object.Identity;
+ return identity.getStringAttribute("location");</Source>
+          </Script>
+        </Field>
+        <Field displayName="extensionAttribute4" name="extensionAttribute4" type="string">
+          <Script>
+            <Source>import sailpoint.object.Identity;
+return identity.getStringAttribute("managerEmployeeNumber");</Source>
+          </Script>
+        </Field>
+      </Section>
+      <Section label="General" name="General">
+        <Field displayName="con_prov_policy_ad_givenName" helpKey="help_con_prov_policy_ad_givenName" name="givenName" section="General" type="string">
+          <Script>
+            <Source>
+              import sailpoint.object.Identity;
+              return identity.getStringAttribute("firstname");
+            </Source>
+          </Script>
+        </Field>
+        <Field displayName="Display Name" helpKey="Display Name" name="displayName" section="General" type="string">
+          <Script>
+            <Source>return identity.getStringAttribute("displayName");</Source>
+          </Script>
+        </Field>
+        <Field displayName="con_prov_policy_ad_sn" helpKey="help_con_prov_policy_ad_sn" name="sn" section="General" type="string">
+          <Script>
+            <Source>
+              import sailpoint.object.Identity;
+              return identity.getStringAttribute("lastname");
+            </Source>
+          </Script>
+        </Field>
+        <Field displayName="department" helpKey="department" name="department" section="General" type="string">
+          <Script>
+            <Source>
+              import sailpoint.object.Identity;
+              return identity.getStringAttribute("costCenterName");
+            </Source>
+          </Script>
+        </Field>
+        <Field displayName="initials" helpKey="initials" name="initials" section="General" type="string">
+          <Script>
+            <Source>
+              import sailpoint.object.Identity;
+              return identity.getStringAttribute("middleName");
+            </Source>
+          </Script>
+        </Field>
+        <Field displayName="con_prov_policy_ad_description" helpKey="help_con_prov_policy_ad_description" name="description" section="General" type="string">
+          <Script>
+            <Source>			
+		if (identity != null &amp;&amp; identity.getStringAttribute("employeeNumber") != null &amp;&amp; identity.getStringAttribute("jobName") != null &amp;&amp; identity.getStringAttribute("costCenterName") != null) {
+			return identity.getStringAttribute("jobName") + "," + identity.getStringAttribute("costCenterName") + "," + identity.getStringAttribute("employeeNumber");
+		}</Source>
+          </Script>
+        </Field>
+      </Section>
+      <Section label="Dial-in" name="Dial-in">
+        <Field displayName="con_prov_policy_ad_msNPAllowDialin" helpKey="help_con_prov_policy_ad_msNPAllowDialin" name="msNPAllowDialin" section="Dial-in" type="string" value="Not Set">
+          <AllowedValuesDefinition>
+            <Value>
+              <List>
+                <String>Not Set</String>
+                <String>true</String>
+                <String>false</String>
+              </List>
+            </Value>
+          </AllowedValuesDefinition>
+        </Field>
+        <Field displayName="con_prov_policy_ad_msNPCallingStationID" helpKey="help_con_prov_policy_ad_msNPCallingStationID" multi="true" name="msNPCallingStationID" section="Dial-in" type="string"/>
+        <Field displayName="con_prov_policy_ad_msRADIUSCallbackNumber" helpKey="help_con_prov_policy_ad_msRADIUSCallbackNumber" name="msRADIUSCallbackNumber" section="Dial-in" type="string"/>
+        <Field displayName="con_prov_policy_ad_msRADIUSFramedRoute" helpKey="help_con_prov_policy_ad_msRADIUSFramedRoute" multi="true" name="msRADIUSFramedRoute" section="Dial-in" type="string"/>
+        <Field displayName="con_prov_policy_ad_msRADIUSFramedIPAddress" helpKey="help_con_prov_policy_ad_msRADIUSFramedIPAddress" name="msRADIUSFramedIPAddress" section="Dial-in" type="string"/>
+      </Section>
+      <Section label="Exchange" name="Exchange">
+        <Field displayName="con_prov_policy_ad_homeMDB" helpKey="help_con_prov_policy_ad_homeMDB" name="homeMDB" section="Exchange" type="string"/>
+        <Field displayName="con_prov_policy_ad_mailNickname" helpKey="help_con_prov_policy_ad_mailNickname" name="mailNickname" section="Exchange" type="string"/>
+        <Field displayName="con_prov_policy_ad_msExchHideFromAddressLists" helpKey="help_con_prov_policy_ad_msExchHideFromAddressLists" name="msExchHideFromAddressLists" section="Exchange" type="boolean"/>
+        <Field displayName="con_prov_policy_ad_externalEmailAddress" helpKey="help_con_prov_policy_ad_externalEmailAddress" name="exch_externalEmailAddress" section="Exchange" type="string"/>
+      </Section>
+      <Section label="Skype for Business" name="Skype for Business">
+        <Field displayName="con_prov_policy_ad_SipAddress" helpKey="help_con_prov_policy_ad_SipAddress" name="SipAddress" section="Skype for Business" type="string"/>
+        <Field displayName="con_prov_policy_ad_SipDomain" helpKey="help_con_prov_policy_ad_SipDomain" name="SipDomain" section="Skype for Business" type="string"/>
+        <Field displayName="con_prov_policy_ad_SipAddressType" helpKey="help_con_prov_policy_ad_SipAddressType" name="SipAddressType" section="Skype for Business" type="string">
+          <AllowedValuesDefinition>
+            <Value>
+              <List>
+                <String>SamAccountName</String>
+                <String>FirstLastName</String>
+                <String>EmailAddress</String>
+              </List>
+            </Value>
+          </AllowedValuesDefinition>
+        </Field>
+        <Field displayName="con_prov_policy_ad_RegistrarPool" helpKey="help_con_prov_policy_ad_RegistrarPool" name="RegistrarPool" section="Skype for Business" type="string"/>
+      </Section>
+    </Form>
+    <Form name="Create Group" objectType="group" type="Create">
+      <Attributes>
+        <Map>
+          <entry key="pageTitle" value="Create Group"/>
+        </Map>
+      </Attributes>
+      <Section>
+        <Field displayName="con_prov_policy_ad_distinguishedName_group" helpKey="help_con_prov_policy_ad_group_distinguishedName" name="distinguishedName" required="true" type="string"/>
+        <Field displayName="con_prov_policy_ad_sAMAccountName" helpKey="help_con_prov_policy_ad_group_sAMAccountName" name="sAMAccountName" required="true" type="string"/>
+      </Section>
+    </Form>
+    <Form name="Update Group" objectType="group" type="Update">
+      <Attributes>
+        <Map>
+          <entry key="pageTitle" value="Update Group"/>
+        </Map>
+      </Attributes>
+      <Section>
+        <Field displayName="con_prov_policy_ad_GroupType" helpKey="help_con_prov_policy_ad_GroupType" name="GroupType" type="string" value="Security">
+          <AllowedValuesDefinition>
+            <Value>
+              <List>
+                <String>Security</String>
+                <String>Distribution</String>
+              </List>
+            </Value>
+          </AllowedValuesDefinition>
+        </Field>
+        <Field displayName="con_prov_policy_ad_GroupScope" helpKey="help_con_prov_policy_ad_GroupScope" name="GroupScope" type="string" value="Global">
+          <AllowedValuesDefinition>
+            <Value>
+              <List>
+                <String>Domain local</String>
+                <String>Global</String>
+                <String>Universal</String>
+              </List>
+            </Value>
+          </AllowedValuesDefinition>
+        </Field>
+        <Field displayName="departmentNumber" helpKey="departmentNumber" name="departmentNumber" required="true" section="Account" type="string">
+          <Script>
+            <Source> 			
+		return identity.getStringAttribute("costCenterID");
+			</Source>
+          </Script>
+        </Field>
+        <Field displayName="con_prov_policy_ad_description" helpKey="help_con_prov_policy_ad_group_description" name="description" type="string"/>
+        <Field displayName="con_prov_policy_ad_mailNickname" helpKey="help_con_prov_policy_ad_group_mailNickname" name="mailNickname" type="string"/>
+      </Section>
+    </Form>
+  </ProvisioningForms>
+  <Schemas>
+    <Schema displayAttribute="sAMAccountName" identityAttribute="distinguishedName" instanceAttribute="" nativeObjectType="User" objectType="account">
+      <AttributeDefinition name="businessCategory" type="string">
+        <Description>business category</Description>
+      </AttributeDefinition>
+      <AttributeDefinition multi="true" name="carLicense" type="string">
+        <Description>vehicle license or registration plate</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="cn" type="string">
+        <Description>common name(s) for which the entity is known by</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="departmentNumber" type="string">
+        <Description>identifies a department within an organization</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="description" type="string">
+        <Description>descriptive information</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="destinationIndicator" type="string">
+        <Description>destination indicator</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="displayName" type="string">
+        <Description>preferred name to be used when displaying entries</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="distinguishedName" type="string">
+        <Description>distinguished name for which the entity is known by</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="employeeNumber" type="string">
+        <Description>numerically identifies an employee within an organization</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="employeeType" type="string">
+        <Description>type of employment for a person</Description>
+      </AttributeDefinition>
+      <AttributeDefinition multi="true" name="facsimileTelephoneNumber" type="string">
+        <Description>Facsimile (Fax) Telephone Number</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="givenName" type="string">
+        <Description>first name(s) for which the entity is known by</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="homePhone" type="string">
+        <Description>home telephone number</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="homePostalAddress" type="string">
+        <Description>home postal address</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="initials" type="string">
+        <Description>initials of some or all of names, but not the surname(s).</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="internationalISDNNumber" type="string">
+        <Description>international ISDN number</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="l" type="string">
+        <Description>city</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="mail" type="string">
+        <Description>RFC822 Mailbox</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="manager" type="string">
+        <Description>DN of manager</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="mobile" type="string">
+        <Description>mobile telephone number</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="o" type="string">
+        <Description>organization this object belongs to</Description>
+      </AttributeDefinition>
+      <AttributeDefinition multi="true" name="ou" type="string">
+        <Description>organizational unit this object belongs to</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="pager" type="string">
+        <Description>pager telephone number</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="physicalDeliveryOfficeName" type="string">
+        <Description>Physical Delivery Office Name</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="postOfficeBox" type="string">
+        <Description>Post Office Box</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="postalAddress" type="string">
+        <Description>postal address</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="postalCode" type="string">
+        <Description>postal code</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="preferredDeliveryMethod" type="string">
+        <Description>preferred delivery method</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="preferredLanguage" type="string">
+        <Description>preferred written or spoken language for a person</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="registeredAddress" type="string">
+        <Description>registered postal address</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="roomNumber" type="string">
+        <Description>room number</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="secretary" type="string">
+        <Description>DN of secretary</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="seeAlso" type="string">
+        <Description>DN of related object</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="sn" type="string">
+        <Description>last (family) name(s) for which the entity is known by</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="st" type="string">
+        <Description>state or province which this object resides in</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="street" type="string">
+        <Description>street of this object</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="streetAddress" type="string">
+        <Description>street address of this object</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="telephoneNumber" type="string">
+        <Description>Telephone Number</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="teletexTerminalIdentifier" type="string">
+        <Description>Teletex Terminal Identifier</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="telexNumber" type="string">
+        <Description>Telex Number</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="title" type="string">
+        <Description>title associated with the entity</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="uid" type="string">
+        <Description>user identifier</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="userPrincipalName" type="string">
+        <Description>user principal name</Description>
+      </AttributeDefinition>
+      <AttributeDefinition multi="true" name="objectClass" type="string">
+        <Description>object classes of the entity</Description>
+      </AttributeDefinition>
+      <AttributeDefinition entitlement="true" managed="true" multi="true" name="memberOf" type="string">
+        <Description>Group Membership</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="objectSid" type="string">
+        <Description>Windows Security Identifier</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="objectguid" type="string">
+        <Description>Object globally unique identifier </Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="sAMAccountName" type="string">
+        <Description>sAMAccountName</Description>
+      </AttributeDefinition>
+      <AttributeDefinition multi="true" name="accountFlags" type="string">
+        <Description>List of the flags enabled on an account</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="department" type="string">
+        <Description>User's department</Description>
+      </AttributeDefinition>
+      <AttributeDefinition multi="true" name="msNPCallingStationID" type="string">
+        <Description>CallingStationID</Description>
+      </AttributeDefinition>
+      <AttributeDefinition multi="true" name="msRADIUSFramedRoute" type="string">
+        <Description>Static Routes for Dial-In connection</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="msNPAllowDialin" type="string">
+        <Description>Is dial-in allowed</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="msRADIUSCallbackNumber" type="string">
+        <Description>Callback Number</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="msRADIUSFramedIPAddress" type="string">
+        <Description>Define Static IP Address</Description>
+      </AttributeDefinition>
+      <AttributeDefinition internalName="targetAddress" name="externalEmailAddress" type="string">
+        <Description>External email address of Mail User</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="mailNickname" type="string">
+        <Description>Exchange Alias</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="homeMDB" type="string">
+        <Description>Exchange Database</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="msExchHideFromAddressLists" type="string">
+        <Description>Hide from Exchange address lists</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="msRTCSIP-UserEnabled" type="string">
+        <Description>User enabled for Skype for Business Server</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="SipAddress" type="string">
+        <Description>Skype for Business sipAddress</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="RegistrarPool" type="string">
+        <Description>Skype for Business Registrar pool</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="LyncPinSet" type="string">
+        <Description>Skype for Business user pin set status</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="LyncPinLockedOut" type="string">
+        <Description>Skype for Business user pin lock status</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="msDS-PrincipalName" type="string">
+        <Description>Name of the entity in the format "NetBIOS domain name\sAMAccountName"</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="employeeID" type="string">
+        <Description/>
+      </AttributeDefinition>
+      <AttributeDefinition name="extensionAttribute4" type="string">
+        <Description/>
+      </AttributeDefinition>
+    </Schema>
+    <Schema displayAttribute="sAMAccountName" featuresString="PROVISIONING, GROUPS_HAVE_MEMBERS" hierarchyAttribute="memberOf" identityAttribute="distinguishedName" instanceAttribute="" nativeObjectType="Group" objectType="group">
+      <AttributeDefinition name="cn" type="string">
+        <Description>common name(s) for which the entity is known by</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="distinguishedName" type="string">
+        <Description>distinguished name for which the entity is known by</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="owner" type="string">
+        <Description>owner (of the object)</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="description" type="string">
+        <Description>descriptive information</Description>
+      </AttributeDefinition>
+      <AttributeDefinition entitlement="true" multi="true" name="memberOf" type="string">
+        <Description>Group Membership</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="objectSid" type="string">
+        <Description>Windows Security Identifier</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="objectguid" type="string">
+        <Description>Object globally unique identifier </Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="mailNickname" type="string">
+        <Description>Exchange Distribution Group Name</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="GroupType" type="string">
+        <Description>Group Type</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="GroupScope" type="string">
+        <Description>Group Scope</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="sAMAccountName" type="string">
+        <Description>sAMAccountName</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="msDS-PrincipalName" type="string">
+        <Description>Name of the entity in the format "NetBIOS domain name\sAMAccountName"</Description>
+      </AttributeDefinition>
+      <Attributes>
+        <Map>
+          <entry key="groupMemberAttribute" value="member"/>
+        </Map>
+      </Attributes>
+    </Schema>
+  </Schemas>
+  <ApplicationScorecard/>
+</Application>

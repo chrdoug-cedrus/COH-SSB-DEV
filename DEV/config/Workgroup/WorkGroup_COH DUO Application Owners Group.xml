@@ -1,0 +1,24 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE Identity PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Identity name="COH DUO Application Owners Group" workgroup="true">
+  <Attributes>
+    <Map>
+      <entry key="displayName" value="COH DUO Application Owners Group"/>
+    </Map>
+  </Attributes>
+  <Capabilities>
+    <Reference class="sailpoint.object.Capability" name="ApplicationAdministrator"/>
+    <Reference class="sailpoint.object.Capability" name="IdentityCorrelationAdministrator"/>
+    <Reference class="sailpoint.object.Capability" name="TaskResultsViewer"/>
+  </Capabilities>
+  <Description>WorkGroup for DUO Application Owners at COH</Description>
+  <Preferences>
+    <Map>
+      <entry key="workgroupNotificationOption">
+        <value>
+          <WorkgroupNotifationOption>GroupEmailOnly</WorkgroupNotifationOption>
+        </value>
+      </entry>
+    </Map>
+  </Preferences>
+</Identity>

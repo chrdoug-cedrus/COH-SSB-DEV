@@ -1,0 +1,29 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="COH_Rule_NullDateRule" type="IdentityAttribute">
+  <Description>Identity attribute rules are used when the value is not simply a copy of an application account attribute value.  A transformation may be necessary on the account attribute, or several account attributes may need to be combined to produce the identity attribute.
+
+This rule can be called in two ways: as a global mapping rule and an application mapping rule.  A global mapping rule is called whenever the identity is refreshed.  The rule can look at any account attributes.  An application mapping rule is called only when the identity contains an account link for that application, this link is passed in the "link" argument which is not passed in global mapping rules.</Description>
+  <Signature returnType="String"/>
+  <Source>import sailpoint.object.Identity;
+import sailpoint.tools.Util;
+import org.apache.log4j.Logger;
+import org.apache.log4j.Level;
+  
+  Logger  logger = Logger.getLogger("sailpoint.custom.manulife.rule.CorrelationRule"); 
+  Logger  logger = Logger.getLogger("sailpoint.api.Identitizer");
+  logger.setLevel(Level.DEBUG); 
+
+  String lastDate=  null;
+  logger.debug("********Last Date Rule *************** ");
+  lastDate= identity.getAttribute("lastDate");
+
+logger.debug("********Last Date Rule *************** : lastDate*** " +lastDate);
+
+  if(lastDate == null  || lastDate.isEmpty() || lastDate.equalsIgnoreCase("(null)"))
+    {
+	 return ""; 
+	}
+  //logger.setLevel(Level.OFF); 
+  return lastDate;</Source>
+</Rule>

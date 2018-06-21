@@ -1,0 +1,93 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="COH_Rule_AD DescriptionAttribute Sync Rule" type="IdentityAttributeTarget">
+  <Description>Identity attribute target rules are used to tranform identity attribute values that are being pushed to targets.</Description>
+  <Signature returnType="Object">
+    <Inputs>
+      <Argument name="log">
+        <Description>
+          The log object associated with the SailPointContext.
+        </Description>
+      </Argument>
+      <Argument name="context">
+        <Description>
+          A sailpoint.api.SailPointContext object that can be used to query the database if necessary.
+        </Description>
+      </Argument>
+      <Argument name="value" type="Object">
+        <Description>
+           The value of the identity attribute.  Note that this could be single value or a list of values.
+        </Description>
+      </Argument>
+      <Argument name="sourceIdentityAttribute">
+        <Description>
+           The sailpoint.object.ObjectAttribute for this target.
+        </Description>
+      </Argument>
+      <Argument name="sourceIdentityAttributeName">
+        <Description>
+           The name of the identity attribute for this target.
+        </Description>
+      </Argument>
+      <Argument name="sourceAttributeRequest">
+        <Description>
+           The sailpoint.object.ProvisioningPlan.AttributeRequest that is
+           setting the attribute on the identity.
+        </Description>
+      </Argument>
+      <Argument name="target">
+        <Description>
+           The sailpoint.object.AttributeTarget that is being processed.
+        </Description>
+      </Argument>
+      <Argument name="identity">
+        <Description>
+           The sailpoint.object.Identity that is being processed.
+        </Description>
+      </Argument>
+      <Argument name="project">
+        <Description>
+           The sailpoint.object.ProvisioningProject that has the changes that
+           are being requested.
+        </Description>
+      </Argument>
+    </Inputs>
+    <Returns>
+      <Argument name="attributeValue">
+        <Description>
+          The transformed value that will be pushed to the target.
+        </Description>
+      </Argument>
+    </Returns>
+  </Signature>
+  <Source>import sailpoint.object.Identity;
+import sailpoint.object.Application;
+import sailpoint.tools.Util;
+import org.apache.log4j.Logger;
+import org.apache.log4j.Level;
+  
+  Logger  logger = Logger.getLogger("sailpoint.custom.COH.rule.CorrelationRule"); 
+  Logger  logger = Logger.getLogger("sailpoint.api.Identitizer");
+  logger.setLevel(Level.DEBUG); 
+
+  String applicationName = "COH Active Directory Test";
+//  String appName  =  app.getName();
+//     logger.debug("********appName    " + appl.toString());
+     List links = identity.getLinks();
+			if(links != null) {   
+				for(Link link : links) {  
+					if(link.getApplicationName().equalsIgnoreCase(applicationName)) {
+					      Attributes adAttribute = link.getAttributes();
+						  String syncAttribute = adAttribute.getString("division");
+                          logger.debug(" Attribute Sync Value:  " + adAttribute.getString("division"));
+						  if(!syncAttribute.isEmpty() &amp;&amp; syncAttribute != null &amp;&amp; syncAttribute.equalsIgnoreCase("IAMHOPE-IIQ")){
+						  String changedAttribute = identity.getAttribute("jobName")+ "," + identity.getAttribute("costCenterName") + "," + identity.getAttribute("employeeNumber") ;
+                          logger.debug(" Descriptor Field :   " + changedAttribute);
+						  return changedAttribute;
+                          }
+					}
+				}
+
+            }
+//  return " ";</Source>
+</Rule>

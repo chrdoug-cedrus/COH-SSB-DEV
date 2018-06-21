@@ -1,0 +1,83 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="COH_Rule_SalesForce Disable provisioning policy" type="BeforeProvisioning">
+  <Description>An IdentityIQ server-side rule that is executed before the connector's provisioning method is called. This gives the customer the ability to customize or react to anything in the ProvisioningPlan BEFORE it is sent to the underlying connectors used in provisioning. 
+
+This rule will be called for any application found in a plan that also has a configured 'beforeProvisioningRule' configured.  
+
+The plan can be updated directly in the rule by reference and does not need to return the plan.</Description>
+  <Source>import sailpoint.object.ProvisioningPlan;
+import sailpoint.object.ProvisioningPlan.AccountRequest;
+import sailpoint.object.ProvisioningPlan.AccountRequest.Operation; 
+import sailpoint.object.ProvisioningPlan.AttributeRequest;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import org.apache.log4j.Logger;
+import org.apache.log4j.Level;
+import sailpoint.object.Identity;
+import sailpoint.object.Application;
+import sailpoint.object.Link;
+import sailpoint.object.Attributes;
+
+Logger  logger = Logger.getLogger("sailpoint.custom.COH.provisioning.rule.SalesForce"); 
+Logger  logger = Logger.getLogger("sailpoint.api.Identitizer 1.0");
+logger.setLevel(Level.DEBUG); 
+String changeUsername = "";
+String changeFederation = "";
+String changeAlias = "";
+String changeCommunityNickname = "";
+String changeEmail = "";
+Identity identity = plan.getIdentity();
+   List links = identity.getLinks();
+	if(links != null) {   
+		for(Link link : links) {  
+			if(link.getApplicationName().equalsIgnoreCase(application.getName())) {
+				 Attributes salesAttribute = link.getAttributes();
+				 logger.debug("****Disable Attributes for SalesForce****************************"  +salesAttribute );
+                 if(salesAttribute.getString("Username").substring(0, 1).matches("0"))
+                 {return;}
+			     changeUsername = "0"+ salesAttribute.getString("Username");
+                 changeAlias = "0"+ salesAttribute.getString("Alias");
+                 changeFederation = "0"+ salesAttribute.getString("FederationIdentifier");
+			     changeCommunityNickname =  "0"+ salesAttribute.getString("CommunityNickname");
+			     changeEmail = "0"+ salesAttribute.getString("Email");
+			}
+		}
+    }
+
+logger.debug("****After Disable Attributes for SalesForce****************************");
+logger.debug("**** SalesForce Value Updated for changeUsername:::::::**********  :" + changeUsername);
+//logger.debug("****After Disable Attributes for SalesForce 1****************************" + plan);
+
+if (plan != null) {
+  //  logger.debug("****After Disable Attributes for SalesForce 1****************************" + plan);
+    AccountRequest accReq = plan.getAccountRequest(application.getName());
+    if (accReq.getOp() != null) {
+        if (accReq.getOp().toString().equals("Disable")) { 
+            if (accReq.getAttributeRequest("IsActive") != null) {
+               accReq.remove(accReq.getAttributeRequest("IsActive"));
+             }        
+		     List attrReqs = accReq.getAttributeRequests();
+			 logger.debug("****After Disable Attributes for SalesForce 22****************************" + attrReqs  );
+             if(attrReqs  != null){
+             logger.debug("****After Disable Attributes for SalesForce 22****************************" + attrReqs  );
+           // attrReqs.add(new AttributeRequest("Active", ProvisioningPlan.Operation.Set, false));
+             attrReqs.add(new AttributeRequest("Username", ProvisioningPlan.Operation.Set, changeUsername));
+             attrReqs.add(new AttributeRequest("FederationIdentifier", ProvisioningPlan.Operation.Set, changeFederation));
+         //    attrReqs.add(new AttributeRequest("Alias", ProvisioningPlan.Operation.Set, changeAlias));
+             attrReqs.add(new AttributeRequest("CommunityNickname", ProvisioningPlan.Operation.Set, changeCommunityNickname));
+             attrReqs.add(new AttributeRequest("Email", ProvisioningPlan.Operation.Set, changeEmail));
+ //       attrReqs.add(new AttributeRequest("IsActive", ProvisioningPlan.Operation.Remove, ""  ));
+			 logger.debug("****After Disable Attributes for SalesForce 22****************************" + attrReqs  );
+ //     attrReqs.add(new AttributeRequest("IsActive", ProvisioningPlan.Operation.Set, false ));
+             accReq.setAttributeRequests(attrReqs);
+             logger.debug("****After Disable Attributes for SalesForce Updated attribute**************************" + changeUsername);
+	        }
+//			if (accReq.getAttributeRequest("IsActive") != null) {
+//               accReq.remove(accReq.getAttributeRequest("IsActive"));
+//             }
+        }
+    }
+}</Source>
+</Rule>

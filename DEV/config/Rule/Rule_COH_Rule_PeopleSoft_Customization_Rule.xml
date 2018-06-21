@@ -1,0 +1,57 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="COH_PeopleSoft_Customization_Rule" type="ResourceObjectCustomization">
+  <Description>Currently, this rule sets IIQDisabled to True if EMPL_Status = "T"</Description>
+  <Signature returnType="ResourceObject">
+    <Inputs>
+      <Argument name="log">
+        <Description>
+          The log object associated with the SailPointContext.
+        </Description>
+      </Argument>
+      <Argument name="context">
+        <Description>
+          A sailpoint.api.SailPointContext object that can be used to query the database if necessary.
+        </Description>
+      </Argument>
+      <Argument name="object">
+        <Description>
+          The ResourceObject built by the connector.
+        </Description>
+      </Argument>
+      <Argument name="application">
+        <Description>
+          Application that references the connector.
+        </Description>
+      </Argument>
+      <Argument name="connector">
+        <Description>
+          The connector object.
+        </Description>
+      </Argument>
+      <Argument name="state">
+        <Description>
+          A Map containing state information.
+        </Description>
+      </Argument>
+    </Inputs>
+    <Returns>
+      <Argument name="resourceObject">
+        <Description>
+          The updated resource object.
+        </Description>
+      </Argument>
+    </Returns>
+  </Signature>
+  <Source>// If EMPL_STATUS has been populated with "T" set the account to disabled.  
+String statusString = object.getAttribute("EMPL_STATUS");  
+if ( (null != statusString) &amp;&amp; (0 != statusString.length()) ) {  
+   if ("T".equalsIgnoreCase(statusString) || "U".equalsIgnoreCase(statusString) || "D".equalsIgnoreCase(statusString)) {  
+      object.put("IIQDisabled", true);  
+         }  
+} else {  
+      object.put("IIQDisabled", false);  
+}  
+  
+return object;</Source>
+</Rule>

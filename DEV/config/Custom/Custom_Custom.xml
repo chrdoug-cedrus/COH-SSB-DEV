@@ -1,0 +1,19 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE Custom PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Custom name="Custom">
+  <Attributes>
+    <Map>
+      <entry key="IIQ_defaultManager" value="spadmin"/>
+      <entry key="OU30" value=",OU=BRI,OU=EDIM Test,OU=TEST OU,DC=coh,DC=org"/>
+      <entry key="OU80" value=",OU=Medical Foundation,OU=EDIM Test,OU=TEST OU,DC=coh,DC=org"/>
+      <entry key="ouDefault" value=",OU=COH,OU=EDIM Test,OU=TEST OU,DC=coh,DC=org"/>
+      <entry key="secretAttributes">
+        <value>
+          <List>
+            <String>password</String>
+          </List>
+        </value>
+      </entry>
+    </Map>
+  </Attributes>
+</Custom>

@@ -1,0 +1,240 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE Application PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Application authoritative="true" connector="sailpoint.connector.JDBCConnector" featuresString="DISCOVER_SCHEMA, PROVISIONING, SYNC_PROVISIONING, DIRECT_PERMISSIONS, SEARCH, ENABLE, UNLOCK, ADDITIONAL_ACCOUNT_REQUEST, ACCOUNT_ONLY_REQUEST" icon="databaseIcon" name="COH_PeopleSoft_HR" profileClass="" type="JDBC">
+  <AccountCorrelationConfig>
+    <Reference class="sailpoint.object.CorrelationConfig" name="COH_CorrelationConfig_PeopleSoft"/>
+  </AccountCorrelationConfig>
+  <Attributes>
+    <Map>
+      <entry key="SQL" value="Select a.* from PS_COH_IAM_EMP a Join (select EMPLID, max(START_DT) as START_DT from PS_COH_IAM_EMP group by EMPLID) b on a.EMPLID=b.EMPLID and a.START_DT=b.START_DT order by a.EMPLID"/>
+      <entry key="acctAggregationEnd">
+        <value>
+          <Date>1527704098656</Date>
+        </value>
+      </entry>
+      <entry key="acctAggregationStart">
+        <value>
+          <Date>1527703691686</Date>
+        </value>
+      </entry>
+      <entry key="afterProvisioningRule"/>
+      <entry key="aggregationMode">
+        <value>
+          <Boolean/>
+        </value>
+      </entry>
+      <entry key="beforeProvisioningRule"/>
+      <entry key="buildMapRule" value="DateBuildMap Rule"/>
+      <entry key="compositeDefinition"/>
+      <entry key="deltaTable"/>
+      <entry key="driverClass" value="oracle.jdbc.driver.OracleDriver"/>
+      <entry key="getDeltaSQL"/>
+      <entry key="isPermissionEnabled">
+        <value>
+          <Boolean/>
+        </value>
+      </entry>
+      <entry key="jdbcProvisionRule" value="COH_PeopleSoft_WriteBack Rule"/>
+      <entry key="managerCorrelationFilter">
+        <value>
+          <Filter operation="EQ" property="employeeNumber" value="SUPERVISOR_ID"/>
+        </value>
+      </entry>
+      <entry key="mergeRows">
+        <value>
+          <Boolean/>
+        </value>
+      </entry>
+      <entry key="nativeChangeDetectionAttributeScope" value="entitlements"/>
+      <entry key="nativeChangeDetectionAttributes"/>
+      <entry key="nativeChangeDetectionEnabled">
+        <value>
+          <Boolean/>
+        </value>
+      </entry>
+      <entry key="nativeChangeDetectionOperations"/>
+      <entry key="partitionMode">
+        <value>
+          <Boolean/>
+        </value>
+      </entry>
+      <entry key="partitionStatements"/>
+      <entry key="password" value="1:SQY7himiG0ueydor2CqHRg=="/>
+      <entry key="provisionRule" value="globalRule"/>
+      <entry key="sysDescriptions">
+        <value>
+          <Map>
+            <entry key="en_US" value="Authoritative Application for City of Hope. This JDBC application reads from a Database Table located onptxerpoda-scn and connects to an Oracle database PSHCMTST. This Table is an extract of the production PeopleSoft Data."/>
+          </Map>
+        </value>
+      </entry>
+      <entry key="templateApplication" value="JDBC Template"/>
+      <entry key="testConnSQL"/>
+      <entry key="url" value="jdbc:oracle:thin:@ptxerpoda-scn:1521:PSHCMTST"/>
+      <entry key="useExecuteQuery">
+        <value>
+          <Boolean/>
+        </value>
+      </entry>
+      <entry key="useStoredProcedureDelta">
+        <value>
+          <Boolean/>
+        </value>
+      </entry>
+      <entry key="useStoredProcedureDirectPermission">
+        <value>
+          <Boolean/>
+        </value>
+      </entry>
+      <entry key="useStoredProcedureGetObject">
+        <value>
+          <Boolean/>
+        </value>
+      </entry>
+      <entry key="useStoredProcedurePartition">
+        <value>
+          <Boolean/>
+        </value>
+      </entry>
+      <entry key="useStoredProcedureSqlStmt">
+        <value>
+          <Boolean/>
+        </value>
+      </entry>
+      <entry key="useStoredProcedureTestConn">
+        <value>
+          <Boolean/>
+        </value>
+      </entry>
+      <entry key="user" value="IAMUSER"/>
+    </Map>
+  </Attributes>
+  <CreationRule>
+    <Reference class="sailpoint.object.Rule" name="COH_CreationRule_Set_Workflow"/>
+  </CreationRule>
+  <CustomizationRule>
+    <Reference class="sailpoint.object.Rule" name="COH_PeopleSoft_Customization_Rule"/>
+  </CustomizationRule>
+  <Owner>
+    <Reference class="sailpoint.object.Identity" name="spadmin"/>
+  </Owner>
+  <Schemas>
+    <Schema displayAttribute="EMPLID" identityAttribute="EMPLID" instanceAttribute="" nativeObjectType="account" objectType="account" permissionsRemediationModificationType="None">
+      <AttributeDefinition name="FIRST_NAME" type="string">
+        <Description/>
+      </AttributeDefinition>
+      <AttributeDefinition name="LAST_NAME" type="string">
+        <Description/>
+      </AttributeDefinition>
+      <AttributeDefinition name="MIDDLE_NAME" type="string">
+        <Description/>
+      </AttributeDefinition>
+      <AttributeDefinition name="NAME_DISPLAY" type="string">
+        <Description/>
+      </AttributeDefinition>
+      <AttributeDefinition name="COMPANY" type="string">
+        <Description/>
+      </AttributeDefinition>
+      <AttributeDefinition name="COMPANY_DESCR" type="string">
+        <Description/>
+      </AttributeDefinition>
+      <AttributeDefinition name="PER_ORG" type="string">
+        <Description/>
+      </AttributeDefinition>
+      <AttributeDefinition name="EMPLID" type="string">
+        <Description/>
+      </AttributeDefinition>
+      <AttributeDefinition name="COH_PHI_CD" type="string">
+        <Description/>
+      </AttributeDefinition>
+      <AttributeDefinition name="EMPL_STATUS" type="string">
+        <Description/>
+      </AttributeDefinition>
+      <AttributeDefinition name="DEPTID" type="string">
+        <Description/>
+      </AttributeDefinition>
+      <AttributeDefinition name="DEPTNAME" type="string">
+        <Description/>
+      </AttributeDefinition>
+      <AttributeDefinition name="BUSINESS_UNIT_GL" type="string">
+        <Description/>
+      </AttributeDefinition>
+      <AttributeDefinition name="DESCR" type="string">
+        <Description/>
+      </AttributeDefinition>
+      <AttributeDefinition name="JOBCODE" type="string">
+        <Description/>
+      </AttributeDefinition>
+      <AttributeDefinition name="JOBCODE_DESCR" type="string">
+        <Description/>
+      </AttributeDefinition>
+      <AttributeDefinition name="BUSINESS_TITLE" type="string">
+        <Description/>
+      </AttributeDefinition>
+      <AttributeDefinition name="MAIL_DROP" type="string">
+        <Description/>
+      </AttributeDefinition>
+      <AttributeDefinition name="LOCATION" type="string">
+        <Description/>
+      </AttributeDefinition>
+      <AttributeDefinition name="LOCATION_DESCR" type="string">
+        <Description/>
+      </AttributeDefinition>
+      <AttributeDefinition name="SUPERVISOR_ID" type="string">
+        <Description/>
+      </AttributeDefinition>
+      <AttributeDefinition name="OFFICER_CD" type="string">
+        <Description/>
+      </AttributeDefinition>
+      <AttributeDefinition name="ACTION_CODE" type="string">
+        <Description/>
+      </AttributeDefinition>
+      <AttributeDefinition name="ACTION_DT" type="string">
+        <Description/>
+      </AttributeDefinition>
+      <AttributeDefinition name="EFFDT" type="string">
+        <Description/>
+      </AttributeDefinition>
+      <AttributeDefinition name="LAST_DATE_WORKED" type="string">
+        <Description/>
+      </AttributeDefinition>
+      <AttributeDefinition name="START_DT" type="string">
+        <Description/>
+      </AttributeDefinition>
+      <AttributeDefinition name="EMAIL_ADDR" type="string">
+        <Description/>
+      </AttributeDefinition>
+      <AttributeDefinition name="USER_OPRID" type="string">
+        <Description/>
+      </AttributeDefinition>
+      <AttributeDefinition name="COH_PHONE_BUSN" type="string">
+        <Description/>
+      </AttributeDefinition>
+      <AttributeDefinition name="COH_PHONE_EXT" type="string">
+        <Description/>
+      </AttributeDefinition>
+      <AttributeDefinition name="COH_PHONE_BCELL" type="string">
+        <Description/>
+      </AttributeDefinition>
+      <AttributeDefinition name="COH_PHONE_PGR1" type="string">
+        <Description/>
+      </AttributeDefinition>
+      <AttributeDefinition name="COH_PHONE_FAX" type="string">
+        <Description/>
+      </AttributeDefinition>
+      <AttributeDefinition name="COH_PHONE_ACAD" type="string">
+        <Description/>
+      </AttributeDefinition>
+      <AttributeDefinition name="COH_PHONE_CALL" type="string">
+        <Description/>
+      </AttributeDefinition>
+      <AttributeDefinition name="COH_CS_SDL_ID" type="string">
+        <Description/>
+      </AttributeDefinition>
+      <AttributeDefinition name="FULL_PART_TIME" type="string">
+        <Description/>
+      </AttributeDefinition>
+    </Schema>
+  </Schemas>
+  <ApplicationScorecard/>
+</Application>
